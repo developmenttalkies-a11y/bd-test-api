@@ -119,6 +119,18 @@ public ResponseEntity<byte[]> downloadTemplate() throws Exception {
             .body(file);
 }
 
+@GetMapping("/waybill/cancel/template")
+public ResponseEntity<byte[]> downloadCancelTemplate() throws Exception {
+
+    byte[] file = templateService.generateCancelTemplate();
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=Bluedart_Bulk_Cancel_Template.xlsx")
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(file);
+}
+
 @GetMapping("/waybill/bulk/success")
 public ResponseEntity<byte[]> downloadSuccessExcel() throws Exception {
      return fileResponse("success.xlsx");

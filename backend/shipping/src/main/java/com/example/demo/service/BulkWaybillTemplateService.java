@@ -75,4 +75,21 @@ public class BulkWaybillTemplateService {
 
         return out.toByteArray();
     }
+
+    public byte[] generateCancelTemplate() throws Exception {
+        Workbook wb=new XSSFWorkbook();
+        Sheet sheet=wb.createSheet("AwbNo");
+        Row headerRow=sheet.createRow(0);
+        Cell cell=headerRow.createCell(0);
+        cell.setCellValue("AwbNo");
+        Row sample=sheet.createRow(1);
+        sample.createCell(0).setCellValue("1234567890");
+
+        ByteArrayOutputStream out=new ByteArrayOutputStream();
+        wb.write(out);
+        wb.close();
+        return out.toByteArray();
+    }
+
+
 }

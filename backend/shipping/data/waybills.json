@@ -2614,4 +2614,123 @@
       "TransactionAmount" : 0
     }
   }
+}, {
+  "awbNo" : "58770014030",
+  "creditReferenceNo" : "CR-1768285279555",
+  "createdAt" : "2026-01-13T06:21:21.448183752",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "AvailableDays" : "",
+        "AvailableTiming" : "",
+        "ConsigneeAddress1" : "this is my address where I born .",
+        "ConsigneeAddress2" : "NA",
+        "ConsigneeAddress3" : "NA",
+        "ConsigneeAttention" : "ABCD",
+        "ConsigneeEmailID" : "testemail@bluedart.com",
+        "ConsigneeMobile" : "9528013045",
+        "ConsigneeName" : "This is ygesh here",
+        "ConsigneePincode" : "248001",
+        "ConsigneeTelephone" : ""
+      },
+      "Returnadds" : {
+        "ReturnAddress1" : "Test RTO Addr1",
+        "ReturnAddress2" : "Test RTO Addr2",
+        "ReturnAddress3" : "Test RTO Addr3",
+        "ReturnContact" : "Test RTO",
+        "ReturnMobile" : "9995554447",
+        "ReturnPincode" : "400057"
+      },
+      "Services" : {
+        "AWBNo" : "",
+        "ActualWeight" : "1",
+        "CollectableAmount" : 10000,
+        "Commodity" : {
+          "CommodityDetail1" : "General Goods"
+        },
+        "CreditReferenceNo" : "CR-1768285279555",
+        "DeclaredValue" : 10000,
+        "Dimensions" : [ {
+          "Breadth" : 32.7,
+          "Count" : 1,
+          "Height" : 3.2,
+          "Length" : 28.9
+        } ],
+        "FavouringName" : "XYZ",
+        "ForwardAWBNo" : "",
+        "ForwardLogisticCompName" : "",
+        "InsurancePaidBy" : "",
+        "InvoiceNo" : "",
+        "IsChequeDD" : "D",
+        "PayableAt" : "ROORKEE",
+        "IsDedicatedDeliveryNetwork" : false,
+        "IsForcePickup" : false,
+        "IsPartialPickup" : false,
+        "IsReversePickup" : false,
+        "ItemCount" : 1,
+        "PDFOutputNotRequired" : true,
+        "PackType" : "",
+        "PickupDate" : "/Date(1742978555000)/",
+        "PickupTime" : "1600",
+        "PieceCount" : "1",
+        "ProductCode" : "A",
+        "ProductType" : 1,
+        "RegisterPickup" : true,
+        "SubProductCode" : "B",
+        "itemdtl" : [ {
+          "ItemName" : "xyz",
+          "Itemquantity" : 1,
+          "ItemValue" : 0,
+          "TotalValue" : 0
+        } ],
+        "noOfDCGiven" : 0
+      },
+      "Shipper" : {
+        "CustomerAddress1" : "Test Cust Addr1",
+        "CustomerAddress2" : "Test Cust Addr2",
+        "CustomerAddress3" : "Test Cust Addr3",
+        "CustomerCode" : "940111",
+        "CustomerMobile" : "9996665554",
+        "CustomerName" : "Test Cust Name",
+        "CustomerPincode" : "122002",
+        "IsToPayCustomer" : false,
+        "OriginArea" : "GGN"
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+      "Api_type" : "S"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "58770014030",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "CR-1768285279555",
+      "ClusterCode" : "",
+      "DestinationArea" : "DRD",
+      "DestinationLocation" : "DRO",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "58770014030-0001",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "ShipmentPickupDate" : "/Date(1768242600000+0530)/",
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      }, {
+        "StatusCode" : "Pickup Registration:InsertFailure",
+        "StatusInformation" : "PickupIsAlreadyRegister"
+      } ],
+      "TokenNumber" : "31091368DEMO",
+      "TransactionAmount" : 0
+    }
+  }
 } ]
