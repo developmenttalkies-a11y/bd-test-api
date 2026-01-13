@@ -2,6 +2,8 @@
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/controller/BluedartAuthController.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/controller/BluedartWaybillController.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/controller/WaybillHistoryController.java
+/workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/dto/BulkCancelResponse.java
+/workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/dto/BulkCancelResult.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/dto/BulkWaybillResult.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/dto/CancelWaybillRequest.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/dto/CancelWaybillResponse.java
@@ -12,6 +14,7 @@
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/repository/WaybillFileRepository.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BluedartAuthService.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BluedartWaybillService.java
+/workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BulkCancelService.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BulkWaybillExcelService.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BulkWaybillFileParser.java
 /workspaces/Bluedart-Test-API/backend/shipping/src/main/java/com/example/demo/service/BulkWaybillTemplateService.java

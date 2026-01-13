@@ -16,6 +16,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import com.example.demo.service.WaybillCancellationService;
+import com.example.demo.dto.BulkCancelResponse;
+import com.example.demo.service.BulkCancelService;
 
 
 import java.nio.file.Files;
@@ -36,9 +38,10 @@ public class BluedartWaybillController {
     private final BulkWaybillFileParser bulkFileParser;
     private final BulkWaybillExcelService excelService;
     private final WaybillCancellationService cancellationService;
+    private final BulkCancelService bulkCancelService;
     
     public BluedartWaybillController(BluedartWaybillService waybillService, WaybillFileRepository repository, 
-        WaybillPdfService pdfService,BulkWaybillTemplateService  templateService, BulkWaybillFileParser bulkFileParser, BulkWaybillExcelService excelService, WaybillCancellationService cancellationService) {
+        WaybillPdfService pdfService,BulkWaybillTemplateService  templateService, BulkWaybillFileParser bulkFileParser, BulkWaybillExcelService excelService, WaybillCancellationService cancellationService,BulkCancelService bulkCancelService) {
         this.waybillService = waybillService;
         this.repository = repository;
         this.pdfService = pdfService;
@@ -46,6 +49,7 @@ public class BluedartWaybillController {
         this.bulkFileParser=bulkFileParser;
         this.excelService=excelService;
         this.cancellationService=cancellationService;
+        this.bulkCancelService=bulkCancelService;
     }
 
     @PostMapping("/waybill")
@@ -159,6 +163,12 @@ public ResponseEntity<?> cancelWaybill(@RequestParam String awbNo) {
     System.out.println("✅ Backend received cancel waybill request for AWB No: " + awbNo);
 
     CancelWaybillResponse response = cancellationService.cancelWaybill(awbNo);
+    return ResponseEntity.ok(response);
+}
+
+@PostMapping(value="/cancel/bulk", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<BulkCancelResponse> bulkCancelExcel(@RequestParam("file") MultipartFile file) {
+    BulkCancelResponse response=bulkCancelService.processExcel(file);
     return ResponseEntity.ok(response);
 }
 

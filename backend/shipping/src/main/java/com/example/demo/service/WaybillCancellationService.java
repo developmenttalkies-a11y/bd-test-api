@@ -66,6 +66,8 @@ public class WaybillCancellationService {
             baseUrl, HttpMethod.POST, entity, CancelWaybillResponse.class); 
 
     return response.getBody();  
-    }    
+    }
+    
+    
 
 }
