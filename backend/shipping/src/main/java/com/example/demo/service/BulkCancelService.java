@@ -47,6 +47,8 @@ public class BulkCancelService {
 
             Sheet sheet = workbook.getSheetAt(0);
 
+            DataFormatter formatter = new DataFormatter(); // added
+
             // Start from row 1 (skip header row)
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 
@@ -59,9 +61,7 @@ public class BulkCancelService {
                 if (cell == null) {
                     continue;
                 }
-
-                cell.setCellType(CellType.STRING);
-                String awbNo = cell.getStringCellValue().trim();
+        String awbNo = formatter.formatCellValue(cell).trim();  // changed
 
                 if (awbNo.isEmpty()) {
                     continue;
