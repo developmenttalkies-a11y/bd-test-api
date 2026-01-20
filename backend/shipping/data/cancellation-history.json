@@ -68,4 +68,18 @@
   "cancelledAt" : "2026-01-19T13:06:07.042561917",
   "source" : "SINGLE",
   "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Invalid Waybill Number\"}]}]}\"",
+  "cancelledAt" : "2026-01-20T12:12:18.064184287",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "90001510266",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 90001510266 has been cancelled successfully",
+  "cancelledAt" : "2026-01-20T12:13:23.759778208",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
 } ]
