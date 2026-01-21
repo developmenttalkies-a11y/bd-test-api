@@ -37,7 +37,7 @@ export default function Pickup() {
     data: unknown
   ): Promise<PickupResponse> {
     const response = await fetch(
-      "https://musical-meme-wrpww4pgjq6639x99-8080.app.github.dev/api/pickup/register",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pickup/register`,
       {
         method: "POST",
         headers: {
