@@ -7,7 +7,7 @@ export default function Home() {
   const [awb, setAwb] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [labelSize, setLabelSize] = useState<Record<string, string>>({});
-  const [isReturnAddressDiffrentFromShippingAddress,setIsReturnAddressDiffrentFromShippingAddress]=useState(false);
+  const [isReturnAddressDiffrent,setIsReturnAddressDiffrent]=useState(false);
 
 
   const [form, setForm] = useState({
@@ -19,9 +19,18 @@ export default function Home() {
     shipperAddress2:"4th Cross, 5th Main, Koramangala 4th Block",
     shipperAddress3:"Bengaluru, Karnataka – 560034",
     shipperMobile: "9996665554",
+    shipperTelephone:"",
     shipperPincode: "560034",
     sender:"Mr. Rahul Sharma",
-    isReturnAddressDiffrentFromShippingAddress:false,
+
+    // return address
+
+          returnAddress1: "",
+          returnAddress2: "",
+          returnAddress3: "",
+          returnContact: "",
+          returnMobile: "",
+          returnPincode: "",
 
     // Consignee
     consigneeName: "",
@@ -126,6 +135,25 @@ useEffect(() => {
     setError(null);
     setAwb(null);
 
+    const Returnadds = isReturnAddressDiffrent
+  ? {
+      ReturnAddress1: form.returnAddress1,
+      ReturnAddress2: form.returnAddress2,
+      ReturnAddress3: form.returnAddress3,
+      ReturnContact: form.returnContact,
+      ReturnMobile: form.returnMobile,
+      ReturnPincode: form.returnPincode,
+    }
+  : {
+      ReturnAddress1: form.shipperAddress1,
+      ReturnAddress2: form.shipperAddress2,
+      ReturnAddress3: form.shipperAddress3,
+      ReturnContact: form.shipperName,
+      ReturnMobile: form.shipperMobile,
+      ReturnPincode: form.shipperPincode,
+    };
+
+
     const payload = {
       Request: {
         Consignee: {
@@ -142,14 +170,7 @@ useEffect(() => {
           ConsigneeTelephone: form.consigneeTelephone,
         },
 
-        Returnadds: {
-          ReturnAddress1: "Test RTO Addr1",
-          ReturnAddress2: "Test RTO Addr2",
-          ReturnAddress3: "Test RTO Addr3",
-          ReturnContact: "Test RTO",
-          ReturnMobile: "9995554447",
-          ReturnPincode: "400057",
-        },
+        Returnadds: Returnadds,
 
         Services: {
           AWBNo: "",
@@ -214,6 +235,7 @@ useEffect(() => {
           CustomerAddress3: form.shipperAddress3,
           CustomerCode: form.customerCode,
           CustomerMobile: form.shipperMobile,
+          CustomerTelephone:form.shipperTelephone,
           CustomerName: form.shipperName,
           CustomerPincode: form.shipperPincode,
           IsToPayCustomer: form.isTopay,
@@ -221,13 +243,13 @@ useEffect(() => {
           Sender:form.sender,
         },
       },
-
       Profile: {
         LoginID: "GG940111",
         LicenceKey: "kh7mnhqkmgegoksipxr0urmqesesseup",
         Api_type: "S",
       },
     };
+    
 
     try {
       const res = await fetch(
@@ -237,7 +259,10 @@ useEffect(() => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
+        
       );
+
+      
 
       if (!res.ok) throw new Error(await res.text());
 
@@ -302,39 +327,40 @@ return (
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <input name="shipperTelephone" placeholder="Telephone No" onChange={handleChange} />
+          <input name="shipperTelephone" placeholder="Telephone No" value={form.shipperTelephone} onChange={handleChange} />
           <input name="shipperMobile" placeholder="Mobile No" value={form.shipperMobile} onChange={handleChange} />
         </div>
       </fieldset>
       <fieldset className="border p-3">
         <legend>Diff. Return Address?</legend>
         <div className="flex items-center gap-1">
-       <label>Yes <input type="radio" value="yes" 
-       name="isReturnAddressDiffrentFromShippingAddress" 
-       checked={isReturnAddressDiffrentFromShippingAddress===true}
-       onChange={handleChange}
+       <label>Yes <input type="radio"  
+       name="isReturnAddressDiffrent" 
+       checked={isReturnAddressDiffrent===true}
+       onChange={()=>setIsReturnAddressDiffrent(true)}
        /></label>
-       <label>No <input type="radio" value="no" 
-       name="isReturnAddressDiffrentFromShippingAddress"
-      checked={isReturnAddressDiffrentFromShippingAddress===false}
-      onChange={handleChange} />
+       <label>No <input type="radio" 
+       name="isReturnAddressDiffrent"
+      checked={isReturnAddressDiffrent===false}
+      onChange={()=>setIsReturnAddressDiffrent(false)} />
       </label>
        </div>
-       {isReturnAddressDiffrentFromShippingAddress && (
+       {isReturnAddressDiffrent && (
         <fieldset className="border p-3">
         <legend className="px-2">Return Address</legend>
 
         <div className="grid grid-cols-4 gap-3 mb-3">
-          <input name="shipperAddress1" value={form.shipperAddress1} placeholder="Address1" onChange={handleChange} />
-          <input name="shipperAddress2" placeholder="Address2" value={form.shipperAddress2} onChange={handleChange} />
-          <input name="shipperAddress3" placeholder="Address3" value={form.shipperAddress3} onChange={handleChange} />
-          <input name="shipperPincode" placeholder="Pincode" value={form.shipperPincode} onChange={handleChange} />
+          <input name="returnAddress1" placeholder="Address1" onChange={handleChange} />
+          <input name="returnAddress2" placeholder="Address2" onChange={handleChange} />
+          <input name="returnAddress3" placeholder="Address3" onChange={handleChange} />
+          <input name="returnPincode" placeholder="Pincode"   onChange={handleChange} />
+
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <input name="shipperTelephone" placeholder="Telephone No" onChange={handleChange} />
-          <input name="shipperMobile" placeholder="Mobile No" value={form.shipperMobile} onChange={handleChange} />
-        </div>
+          <input name="returnContact" placeholder="Return Contact" onChange={handleChange} />
+          <input name="returnMobile" placeholder="Return Mobile" onChange={handleChange} />
+          </div>
       </fieldset>
        )}
     </fieldset>
