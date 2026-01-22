@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -7,16 +7,21 @@ export default function Home() {
   const [awb, setAwb] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [labelSize, setLabelSize] = useState<Record<string, string>>({});
-
+  const [isReturnAddressDiffrentFromShippingAddress,setIsReturnAddressDiffrentFromShippingAddress]=useState(false);
 
 
   const [form, setForm] = useState({
     // Shipper
     customerCode: "940111",
     originArea: "GGN",
-    shipperName: "Test Cust Name",
+    shipperName: "XYZ Compnay.com",
+    shipperAddress1:"123, 2nd Floor, Sai Residency",
+    shipperAddress2:"4th Cross, 5th Main, Koramangala 4th Block",
+    shipperAddress3:"Bengaluru, Karnataka – 560034",
     shipperMobile: "9996665554",
-    shipperPincode: "122002",
+    shipperPincode: "560034",
+    sender:"Mr. Rahul Sharma",
+    isReturnAddressDiffrentFromShippingAddress:false,
 
     // Consignee
     consigneeName: "",
@@ -25,6 +30,8 @@ export default function Home() {
     consigneeAddr1: "",
     consigneeAddr2: "",
     consigneeAddr3: "",
+    consigneeTelephone:"",
+    receiver: "",
 
     // Shipment
     productCode: "",
@@ -33,6 +40,17 @@ export default function Home() {
     weight: "",
     declaredValue: "",
     pickupTime: "1600",
+    isTopay:false,
+    creditReferenceNo:"",
+    pieceCount:"",
+    labelSize: "A4",
+    isChequeDD:"",
+    favouringName:"",
+    payableAt:"",
+    invoiceDate:"",
+    invoiceNumber:"",
+    pickupDate:"",
+
 
     // COD
     codAmount: "",
@@ -51,12 +69,16 @@ useEffect(() => {
     .then(setWaybills);
 }, []);
 
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => {
+  const { name, value, type } = e.target;
+
+  setForm(prev => ({
+    ...prev,
+    [name]: type === "number" ? Number(value) : value,
+  }));
+};
 
   /* ---------------- VALIDATION ---------------- */
 
@@ -110,14 +132,14 @@ useEffect(() => {
           AvailableDays: "",
           AvailableTiming: "",
           ConsigneeAddress1: form.consigneeAddr1,
-          ConsigneeAddress2: form.consigneeAddr2 || "NA",
-          ConsigneeAddress3: form.consigneeAddr3 || "NA",
-          ConsigneeAttention: "ABCD",
-          ConsigneeEmailID: "testemail@bluedart.com",
+          ConsigneeAddress2: form.consigneeAddr2 || "",
+          ConsigneeAddress3: form.consigneeAddr3 || "",
+          ConsigneeAttention: form.consigneeName,
+          ConsigneeEmailID: "",
           ConsigneeMobile: form.consigneeMobile,
           ConsigneeName: form.consigneeName,
           ConsigneePincode: form.consigneePincode,
-          ConsigneeTelephone: "",
+          ConsigneeTelephone: form.consigneeTelephone,
         },
 
         Returnadds: {
@@ -141,9 +163,11 @@ useEffect(() => {
 
           Commodity: {
             CommodityDetail1: "General Goods",
+            CommodityDetail2: "General Goods",
+            CommodityDetail3: "General Goods",
           },
 
-          CreditReferenceNo: "CR-" + Date.now(),
+          CreditReferenceNo: form.creditReferenceNo || "CR-" + Date.now(),
           DeclaredValue: Number(form.declaredValue),
 
           Dimensions: [
@@ -154,27 +178,23 @@ useEffect(() => {
               Length: 28.9,
             },
           ],
-          FavouringName:"XYZ",
-          ForwardAWBNo: "",
-          ForwardLogisticCompName: "",
-          InsurancePaidBy: "",
-          InvoiceNo: "",
-          IsChequeDD: "D",
-          PayableAt: "ROORKEE",
-          IsDedicatedDeliveryNetwork: false,
-          IsForcePickup: false,
-          IsPartialPickup: false,
+
           IsReversePickup: false,
           ItemCount: 1,
           PDFOutputNotRequired: true,
           PackType: form.packType,
-          PickupDate: "/Date(1742978555000)/",
+          PickupDate: form.pickupDate,
           PickupTime: form.pickupTime,
-          PieceCount: "1",
+          PieceCount: form.pieceCount,
           ProductCode: form.productCode,
           ProductType: 1,
           RegisterPickup: true,
           SubProductCode: form.subProductCode,
+          FavouringName:form.favouringName,
+          IsChequeDD:form.isChequeDD,
+          PayableAt:form.payableAt,
+          InvoiceDate:form.invoiceDate,
+          InvoiceNumber:form.invoiceNumber,
 
           itemdtl: [
             {
@@ -189,15 +209,16 @@ useEffect(() => {
         },
 
         Shipper: {
-          CustomerAddress1: "Test Cust Addr1",
-          CustomerAddress2: "Test Cust Addr2",
-          CustomerAddress3: "Test Cust Addr3",
+          CustomerAddress1: form.shipperAddress1,
+          CustomerAddress2: form.shipperAddress2 || "",
+          CustomerAddress3: form.shipperAddress3,
           CustomerCode: form.customerCode,
           CustomerMobile: form.shipperMobile,
           CustomerName: form.shipperName,
           CustomerPincode: form.shipperPincode,
-          IsToPayCustomer: false,
+          IsToPayCustomer: form.isTopay,
           OriginArea: form.originArea,
+          Sender:form.sender,
         },
       },
 
@@ -231,128 +252,13 @@ useEffect(() => {
 
   /* ---------------- UI ---------------- */
 
-//   return (
-//     <main className="max-w-4xl mx-auto p-6">
-//       <h1 className="text-2xl font-bold mb-6">
-//         Bluedart Waybill Generator
-//       </h1>
-// <a
-//   href="/bulk-waybill"
-//   className="text-blue-600 underline text-sm"
-// >
-//   → Switch to Bulk Waybill Generator
-// </a>
 
-// <a
-//   href="/cancel-waybill"
-//   className="text-blue-600 underline text-sm m-10"
-// >
-//   → Go to cancel waybills
-// </a>
+const isCOD = form.subProductCode === "C";
+const isDOD = form.subProductCode === "D";
+const isFODDOD = form.subProductCode === "B";
 
-
-//       <div className="grid grid-cols-2 gap-4">
-//         <input name="consigneeName" placeholder="Consignee Name" onChange={handleChange} />
-//         <input name="consigneeMobile" placeholder="Consignee Mobile" onChange={handleChange} />
-//         <input name="consigneePincode" placeholder="Consignee Pincode" onChange={handleChange} />
-//         <input name="consigneeAddr1" placeholder="Address Line 1" onChange={handleChange} />
-
-//         <select name="productCode" onChange={handleChange}>
-//           <option value="">Select Product Code</option>
-//           <option value="A">A – Air Express</option>
-//           <option value="E">E – Express (Road)</option>
-//           <option value="D">Domestic Priority</option>
-//         </select>
-
-//         <select name="subProductCode" onChange={handleChange}>
-//           <option value="">Select Sub Product</option>
-//           <option value="P">P-PREPAID</option>
-//           <option value="C">C-COD</option>
-//           <option value="A">A-FODPREPAID</option>
-//           <option value="B">B-FODDOD</option>
-//           <option value="D">D-DOD</option>
-//         </select>
-
-//         {/* ✅ Show COD field ONLY when COD selected */}
-//         {(form.subProductCode === "C" || form.subProductCode === "B" || form.subProductCode === "D") && (
-//           <input
-//             name="codAmount"
-//             placeholder="COD Amount"
-//             onChange={handleChange}
-//           />
-//         )}
-
-//         <select name="packType" onChange={handleChange}>
-//           <option value="">Select Pack Type (Optional)</option>
-//           <option value="L">L</option>
-//         </select>
-
-//         <input name="weight" placeholder="Weight (kg)" onChange={handleChange} />
-//         <input name="declaredValue" placeholder="Declared Value" onChange={handleChange} />
-//         <input name="itemName" placeholder="Item Name" onChange={handleChange} />
-//       </div>
-       
-//       <button
-//         onClick={generateWaybill}
-//         disabled={loading}
-//         className="mt-6 bg-blue-600 text-white px-6 py-2 rounded"
-//       >
-//         {loading ? "Generating..." : "Generate Waybill"}
-//       </button>
-
-//       {awb && (
-//         <div className="mt-6 bg-green-100 p-4 rounded">
-//           ✅ Waybill Generated: <b>{awb}</b>
-//         </div>
-//       )}
-
-//       {error && (
-//         <div className="mt-6 bg-red-100 p-4 rounded">
-//           ❌ {error}
-//         </div>
-//       )}
-
-//       <table className="mt-8 w-full border">
-//   <thead>
-//     <tr className="bg-gray-100">
-//       <th className="p-2 border">AWB</th>
-//       <th className="p-2 border">Reference</th>
-//       <th className="p-2 border">Date</th>
-//       <th className="p-2 border">Action</th>
-//       <th className="p-2 border">Size</th>
-//     </tr>
-//   </thead>
-//   <tbody>
-//     {waybills.map(w => (
-//       <tr key={w.awbNo}>
-//         <td className="border p-2">{w.awbNo}</td>
-//         <td className="border p-2">{w.creditReferenceNo}</td>
-//         <td className="border p-2">
-//           {new Date(w.createdAt).toLocaleDateString()}
-//         </td>
-//         <td className="border p-2">
-//           <a
-//             href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bluedart/waybill/${w.awbNo}/pdf?size=${labelSize[w.awbNo] || "A4"}`}
-//             className="text-blue-600 underline"
-//           >
-//             Download PDF
-//           </a>
-//         </td>
-//         <td>
-//           <select 
-//       value={labelSize[w.awbNo] || "A4"} 
-//       onChange={e => setLabelSize(prev=>({...prev,[w.awbNo]:e.target.value}))} 
-//       className="m-2 border p-2 rounded">
-//         <option value="A4">lbl-A4</option>
-//         <option value="LABEL_4X6">lbl-4x6</option>
-//       </select>
-//         </td>
-//       </tr>
-//     ))}
-//   </tbody>
-// </table>
-//     </main>
-//   );
+const needsCollectable = isCOD || isDOD || isFODDOD;
+const needsChequeDetails = isDOD || isFODDOD;
 
 return (
   <main className="max-w-7xl mx-auto p-6 text-sm">
@@ -360,31 +266,78 @@ return (
       Book A Shipment
     </h1>
 
+    <a
+  href="/bulk-waybill"
+  className="text-blue-600 underline text-sm"
+>
+  → Switch to Bulk Waybill Generator
+</a>
+
+<a
+  href="/cancel-waybill"
+  className="text-blue-600 underline text-sm m-10"
+>
+  → Go to cancel waybills
+</a>
+
+
     {/* ================= SHIPPER ================= */}
     <fieldset className="border p-4 mb-4">
       <legend className="font-semibold px-2">Shipper</legend>
 
       <div className="grid grid-cols-3 gap-3 mb-3">
-        <input name="customerCode" placeholder="Customer Code" onChange={handleChange} />
-        <input name="shipperName" placeholder="Shipper Name" onChange={handleChange} />
-        <input placeholder="Sender Name" />
+        <input name="customerCode" placeholder="Customer Code" value={form.customerCode} onChange={handleChange} />
+        <input name="shipperName" placeholder="Shipper Name" value={form.shipperName} onChange={handleChange} />
+        <input name="sender" placeholder="Sender Name" value={form.sender} onChange={handleChange} />
       </div>
 
       <fieldset className="border p-3">
         <legend className="px-2">Pickup Address</legend>
 
         <div className="grid grid-cols-4 gap-3 mb-3">
-          <input placeholder="Address1" />
-          <input placeholder="Address2" />
-          <input placeholder="Address3" />
-          <input name="shipperPincode" placeholder="Pincode" onChange={handleChange} />
+          <input name="shipperAddress1" value={form.shipperAddress1} placeholder="Address1" onChange={handleChange} />
+          <input name="shipperAddress2" placeholder="Address2" value={form.shipperAddress2} onChange={handleChange} />
+          <input name="shipperAddress3" placeholder="Address3" value={form.shipperAddress3} onChange={handleChange} />
+          <input name="shipperPincode" placeholder="Pincode" value={form.shipperPincode} onChange={handleChange} />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <input placeholder="Telephone No" />
-          <input name="shipperMobile" placeholder="Mobile No" onChange={handleChange} />
+          <input name="shipperTelephone" placeholder="Telephone No" onChange={handleChange} />
+          <input name="shipperMobile" placeholder="Mobile No" value={form.shipperMobile} onChange={handleChange} />
         </div>
       </fieldset>
+      <fieldset className="border p-3">
+        <legend>Diff. Return Address?</legend>
+        <div className="flex items-center gap-1">
+       <label>Yes <input type="radio" value="yes" 
+       name="isReturnAddressDiffrentFromShippingAddress" 
+       checked={isReturnAddressDiffrentFromShippingAddress===true}
+       onChange={handleChange}
+       /></label>
+       <label>No <input type="radio" value="no" 
+       name="isReturnAddressDiffrentFromShippingAddress"
+      checked={isReturnAddressDiffrentFromShippingAddress===false}
+      onChange={handleChange} />
+      </label>
+       </div>
+       {isReturnAddressDiffrentFromShippingAddress && (
+        <fieldset className="border p-3">
+        <legend className="px-2">Return Address</legend>
+
+        <div className="grid grid-cols-4 gap-3 mb-3">
+          <input name="shipperAddress1" value={form.shipperAddress1} placeholder="Address1" onChange={handleChange} />
+          <input name="shipperAddress2" placeholder="Address2" value={form.shipperAddress2} onChange={handleChange} />
+          <input name="shipperAddress3" placeholder="Address3" value={form.shipperAddress3} onChange={handleChange} />
+          <input name="shipperPincode" placeholder="Pincode" value={form.shipperPincode} onChange={handleChange} />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <input name="shipperTelephone" placeholder="Telephone No" onChange={handleChange} />
+          <input name="shipperMobile" placeholder="Mobile No" value={form.shipperMobile} onChange={handleChange} />
+        </div>
+      </fieldset>
+       )}
+    </fieldset>
     </fieldset>
 
     {/* ================= CONSIGNEE ================= */}
@@ -393,7 +346,7 @@ return (
 
       <div className="grid grid-cols-2 gap-3 mb-3">
         <input name="consigneeName" placeholder="Consignee Name" onChange={handleChange} />
-        <input placeholder="Receiver Name" />
+        <input name="receiver" placeholder="Receiver Name" onChange={handleChange}/>
       </div>
 
       <fieldset className="border p-3">
@@ -407,7 +360,7 @@ return (
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <input placeholder="Telephone No" />
+          <input name="consigneeTelephone" placeholder="Telephone No" onChange={handleChange}/>
           <input name="consigneeMobile" placeholder="Mobile No" onChange={handleChange} />
         </div>
       </fieldset>
@@ -417,13 +370,90 @@ return (
     <fieldset className="border p-4 mb-4">
       <legend className="font-semibold px-2">Shipment Details</legend>
 
-      <div className="grid grid-cols-6 gap-3">
-        <input placeholder="Ref No" />
-        <input placeholder="Invoice No" />
-        <input type="date" />
-        <input placeholder="No Of Box" />
+      <div className="grid grid-cols-7 gap-2 items-center">
+        <input name="creditReferenceNo" placeholder="Ref No" onChange={handleChange}/>
+        <input name="invoiceNumber" placeholder="Invoice No" onChange={handleChange} />
+        <div className="flex items-center gap-1">
+          <label className="text-xs whitespace-nowrap font-bold">InvDt : </label>
+          <input name="invoiceDate" type="date" id="invDt" onChange={handleChange}/>
+        </div>
+        
+        <input name="pieceCount" value={form.pieceCount} placeholder="No Of Box" onChange={handleChange} />
         <input name="declaredValue" placeholder="Dec. Value" onChange={handleChange} />
         <input name="weight" placeholder="Weight" onChange={handleChange} />
+          <div className="flex items-center gap-1">
+          <label className="text-xs whitespace-nowrap font-bold">PickupDt : </label>
+          <input name="pickupDate" type="date" onChange={handleChange} />
+          </div>
+        
+
+             {needsCollectable && (
+          <input
+            name="codAmount"
+            type="number"
+            min="1"
+            value={form.codAmount}
+            placeholder="COD Amount"
+            onChange={handleChange}
+            required
+            className="border px-2 py-1 rounded"
+          />
+        )}
+
+        {needsChequeDetails && (
+  <fieldset className="border p-3 rounded flex flex-col gap-2">
+    <legend className="font-semibold px-2">
+      DOD / FOD Details
+    </legend>
+
+    <div className="items-center flex items-center gap-1">
+      {/* Favouring Name */}
+      <input
+        name="favouringName"
+        placeholder="Favouring Name"
+        value={form.favouringName}
+        onChange={handleChange}
+        required
+        className="border px-2 py-1 rounded"
+      />
+
+      {/* Cheque / DD */}
+      <div className="flex gap-3 items-center">
+        <label className="flex items-center gap-1">
+          <input
+            type="radio"
+            name="isChequeDD"
+            value="Q"
+            checked={form.isChequeDD === "Q"}
+            onChange={handleChange}
+          />
+          Cheque
+        </label>
+
+        <label className="flex items-center gap-1">
+          <input
+            type="radio"
+            name="isChequeDD"
+            value="D"
+            checked={form.isChequeDD === "D"}
+            onChange={handleChange}
+          />
+          DD
+        </label>
+      </div>
+
+      {/* Payable At */}
+      <input
+        name="payableAt"
+        placeholder="Payable At"
+        value={form.payableAt}
+        onChange={handleChange}
+        required
+        className="border px-2 py-1 rounded flex items-center gap-1"
+      />
+    </div>
+  </fieldset>
+)}
       </div>
     </fieldset>
 
@@ -432,10 +462,10 @@ return (
       <legend className="font-semibold px-2">Item Details</legend>
 
       <div className="grid grid-cols-4 gap-3">
-        <input placeholder="Ref No" />
+        {/* <input name="refNo" placeholder="Ref No" /> */}
         <input name="itemName" placeholder="Item Name" onChange={handleChange} />
-        <input placeholder="Product Desc1" />
-        <input placeholder="Product Desc2" />
+        <input name="commodity1" placeholder="Product Desc1" onChange={handleChange} />
+        <input name="commodity2" placeholder="Product Desc2" onChange={handleChange} />
       </div>
     </fieldset>
 
@@ -454,7 +484,7 @@ return (
 
       <fieldset className="border p-2">
         <legend>SubProduct Code</legend>
-        <select name="subProductCode" onChange={handleChange}>
+        <select name="subProductCode" value={form.subProductCode} onChange={handleChange}>
           <option value="">Select</option>
           <option value="P">P-PREPAID</option>
           <option value="C">C-COD</option>
@@ -463,19 +493,24 @@ return (
         </select>
       </fieldset>
 
+      
+
       <fieldset className="border p-2">
         <legend>IsToPay</legend>
         <label className="mr-2">
-          <input type="radio" name="istopay" /> Yes
+          <input type="radio" name="isTopay" checked={form.isTopay===true} onChange={()=>setForm({...form,isTopay:true})} /> Yes
         </label>
         <label>
-          <input type="radio" name="istopay" defaultChecked /> No
+          <input type="radio" name="isTopay" checked={form.isTopay===false} onChange={()=>setForm({...form,isTopay:false})} /> No
         </label>
       </fieldset>
 
       <fieldset className="border p-2">
         <legend>Label Size</legend>
-        <select>
+        <select name="labelSize"
+        value={form.labelSize}
+        onChange={handleChange}
+        >
           <option value="A4">A4</option>
           <option value="LABEL_4X6">4x6</option>
         </select>
@@ -493,9 +528,10 @@ return (
         <legend>Action</legend>
         <button
           onClick={generateWaybill}
+          disabled={loading}
           className="bg-blue-600 text-white px-3 py-1 rounded"
         >
-          Submit
+          {loading ? "Generating..." : "Submit" }
         </button>
         <button className="bg-gray-400 text-white px-3 py-1 rounded">
           Reset
@@ -508,9 +544,18 @@ return (
       <legend className="font-semibold px-2">Response</legend>
 
       {awb && (
+        <div>
         <p className="text-green-700 font-semibold">
           ✅ Waybill Generated Successfully : {awb}
         </p>
+        
+        <a
+        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bluedart/waybill/${awb}/pdf?size=${form.labelSize}`}
+        className="text-blue-600 underline ml-3"
+        >
+          Click to Download
+        </a>
+        </div>
       )}
 
       {error && (
