@@ -4405,4 +4405,122 @@
       "TransactionAmount" : 0
     }
   }
+}, {
+  "awbNo" : "90001522962",
+  "creditReferenceNo" : "xyz23",
+  "createdAt" : "2026-01-23T10:56:08.900092573",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "AvailableDays" : "",
+        "AvailableTiming" : "",
+        "ConsigneeAddress1" : "546 greater noida",
+        "ConsigneeAddress2" : "adesh nagar",
+        "ConsigneeAddress3" : "Gaziabad road",
+        "ConsigneeAttention" : "Anup Pal",
+        "ConsigneeEmailID" : "",
+        "ConsigneeMobile" : "8070607569",
+        "ConsigneeName" : "Anup Pal",
+        "ConsigneePincode" : "122001",
+        "ConsigneeTelephone" : ""
+      },
+      "Returnadds" : {
+        "ReturnAddress1" : "123, 2nd Floor, Sai Residency",
+        "ReturnAddress2" : "4th Cross, 5th Main, Koramangala 4th Block",
+        "ReturnAddress3" : "Gurgaon, Haryana – 122001",
+        "ReturnContact" : "XYZ Compnay.com",
+        "ReturnMobile" : "9996665554",
+        "ReturnPincode" : "122001"
+      },
+      "Services" : {
+        "AWBNo" : "",
+        "ActualWeight" : "5",
+        "CollectableAmount" : 0,
+        "Commodity" : {
+          "CommodityDetail1" : "Wooden chair",
+          "CommodityDetail2" : "Chiar",
+          "CommodityDetail3" : "chair"
+        },
+        "CreditReferenceNo" : "xyz23",
+        "DeclaredValue" : 102.2,
+        "Dimensions" : [ {
+          "Breadth" : 32.7,
+          "Count" : 1,
+          "Height" : 3.2,
+          "Length" : 28.9
+        } ],
+        "IsReversePickup" : false,
+        "ItemCount" : 1,
+        "PDFOutputNotRequired" : true,
+        "PackType" : "",
+        "PickupDate" : "/Date(1769126400000)/",
+        "PickupTime" : "1600",
+        "PieceCount" : "1",
+        "ProductCode" : "A",
+        "ProductType" : 1,
+        "RegisterPickup" : true,
+        "SubProductCode" : "P",
+        "FavouringName" : "",
+        "IsChequeDD" : "",
+        "PayableAt" : "",
+        "InvoiceDate" : "/Date(1769126400000)/",
+        "InvoiceNumber" : "2485501",
+        "itemdtl" : [ {
+          "ItemName" : "Wooden ",
+          "Itemquantity" : 1,
+          "ItemValue" : 0,
+          "TotalValue" : 0
+        } ],
+        "noOfDCGiven" : 0
+      },
+      "Shipper" : {
+        "CustomerAddress1" : "123, 2nd Floor, Sai Residency",
+        "CustomerAddress2" : "4th Cross, 5th Main, Koramangala 4th Block",
+        "CustomerAddress3" : "Gurgaon, Haryana – 122001",
+        "CustomerCode" : "940111",
+        "CustomerMobile" : "9996665554",
+        "CustomerTelephone" : "",
+        "CustomerName" : "XYZ Compnay.com",
+        "CustomerPincode" : "122001",
+        "IsToPayCustomer" : true,
+        "OriginArea" : "GGN",
+        "Sender" : "Mr. Rahul Sharma"
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+      "Api_type" : "S"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "90001522962",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "xyz23",
+      "ClusterCode" : "GED",
+      "DestinationArea" : "GGN",
+      "DestinationLocation" : "GED",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "90001522962-0001",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "ShipmentPickupDate" : "/Date(1769193000000+0530)/",
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      }, {
+        "StatusCode" : "Pickup Registration:Valid",
+        "StatusInformation" : "31387082DEMO"
+      } ],
+      "TokenNumber" : "31387082DEMO",
+      "TransactionAmount" : 0
+    }
+  }
 } ]

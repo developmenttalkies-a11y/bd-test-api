@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { toBluedartDate } from "./lib/date";
 
 export default function Home() {
@@ -10,6 +10,8 @@ export default function Home() {
   const [labelSize, setLabelSize] = useState<Record<string, string>>({});
   const [isReturnAddressDiffrent,setIsReturnAddressDiffrent]=useState(false);
 
+  const refs = useRef<(HTMLInputElement | HTMLSelectElement | null)[]>([]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [form, setForm] = useState({
     // Shipper
@@ -60,6 +62,9 @@ export default function Home() {
     invoiceDate:"",
     invoiceNumber:"",
     pickupDate:"",
+    comodityDetails1:"",
+    comodityDetails2:"",
+    comodityDetails3:"",
 
 
     // COD
@@ -154,7 +159,7 @@ useEffect(() => {
       ReturnPincode: form.shipperPincode,
     };
 
-
+    
     const payload = {
       Request: {
         Consignee: {
@@ -184,9 +189,9 @@ useEffect(() => {
               : 0,
 
           Commodity: {
-            CommodityDetail1: "General Goods",
-            CommodityDetail2: "General Goods",
-            CommodityDetail3: "General Goods",
+            CommodityDetail1: form.comodityDetails1,
+            CommodityDetail2: form.comodityDetails2,
+            CommodityDetail3: form.comodityDetails3,
           },
 
           CreditReferenceNo: form.creditReferenceNo || "CR-" + Date.now(),
@@ -276,6 +281,35 @@ useEffect(() => {
     }
   };
 
+// const handleKeyDown = (
+//   e: React.KeyboardEvent<
+//     HTMLInputElement | HTMLSelectElement
+//   >,
+//   index: number
+// ) => {
+//   if (e.key === "Enter") {
+//     e.preventDefault();
+
+//     const next = refs.current[index + 1];
+//     if (next) {
+//       next.focus();
+//     }
+//   }
+// };
+
+const handleKeyDown = (
+  e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
+  index: number
+) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const next = inputRefs.current[index + 1];
+    next?.focus();
+  }
+};
+
+
+
   /* ---------------- UI ---------------- */
 
 
@@ -287,7 +321,14 @@ const needsCollectable = isCOD || isDOD || isFODDOD;
 const needsChequeDetails = isDOD || isFODDOD;
 
 return (
-  <main className="max-w-7xl mx-auto p-6 text-sm">
+  <form
+  className="max-w-7xl mx-auto p-6 text-sm"
+  onSubmit={(e) => {
+    e.preventDefault();
+    generateWaybill();
+  }}
+>
+
     <h1 className="text-2xl font-bold text-center mb-6">
       Book A Shipment
     </h1>
@@ -312,9 +353,29 @@ return (
       <legend className="font-semibold px-2">Shipper</legend>
 
       <div className="grid grid-cols-3 gap-3 mb-3">
-        <input name="customerCode" placeholder="Customer Code" value={form.customerCode} onChange={handleChange} />
-        <input name="shipperName" placeholder="Shipper Name" value={form.shipperName} onChange={handleChange} />
-        <input name="sender" placeholder="Sender Name" value={form.sender} onChange={handleChange} />
+        <input
+  ref={(el) => {inputRefs.current[0] = el;}}
+  onKeyDown={e => handleKeyDown(e, 0)}
+  name="customerCode"
+  placeholder="Customer Code"
+  value={form.customerCode}
+  onChange={handleChange}
+/>
+        <input
+  ref={(el) => {
+    inputRefs.current[1] = el;
+  }}
+  onKeyDown={(e) => handleKeyDown(e, 1)}
+  name="shipperName"
+  value={form.shipperName}
+  onChange={handleChange}
+/>
+        <input
+         ref={(el) => {
+    inputRefs.current[2] = el;
+  }}
+  onKeyDown={(e) => handleKeyDown(e, 2)}
+        name="sender" placeholder="Sender Name" value={form.sender} onChange={handleChange} />
       </div>
 
       <fieldset className="border p-3">
@@ -491,8 +552,9 @@ return (
       <div className="grid grid-cols-4 gap-3">
         {/* <input name="refNo" placeholder="Ref No" /> */}
         <input name="itemName" placeholder="Item Name" onChange={handleChange} />
-        <input name="commodity1" placeholder="Product Desc1" onChange={handleChange} />
-        <input name="commodity2" placeholder="Product Desc2" onChange={handleChange} />
+        <input name="comodityDetails1" placeholder="comodityDetails1" onChange={handleChange} />
+         <input name="comodityDetails2" placeholder="comodityDetails2" onChange={handleChange} />
+        <input name="comodityDetails3" placeholder="comodityDetails3" onChange={handleChange} />
       </div>
     </fieldset>
 
@@ -522,7 +584,7 @@ return (
 
       
 
-      <fieldset className="border p-2">
+      {/* <fieldset className="border p-2">
         <legend>IsToPay</legend>
         <label className="mr-2">
           <input type="radio" name="isTopay" checked={form.isTopay===true} onChange={()=>setForm({...form,isTopay:true})} /> Yes
@@ -530,7 +592,34 @@ return (
         <label>
           <input type="radio" name="isTopay" checked={form.isTopay===false} onChange={()=>setForm({...form,isTopay:false})} /> No
         </label>
-      </fieldset>
+      </fieldset> */}
+
+<fieldset className="border p-2">
+  <legend>IsToPay</legend>
+
+  <label className="mr-2">
+    <input
+      type="radio"
+      name="isTopay"
+      value="yes"
+      checked={form.isTopay === true}
+      onChange={() => setForm({ ...form, isTopay: true })}
+    />
+    Yes
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      name="isTopay"
+      value="no"
+      checked={form.isTopay === false}
+      onChange={() => setForm({ ...form, isTopay: false })}
+    />
+    No
+  </label>
+</fieldset>
+
 
       <fieldset className="border p-2">
         <legend>Label Size</legend>
@@ -553,13 +642,22 @@ return (
 
       <fieldset className="border p-2 flex gap-2 items-center">
         <legend>Action</legend>
-        <button
+        {/* <button
           onClick={generateWaybill}
           disabled={loading}
           className="bg-blue-600 text-white px-3 py-1 rounded"
         >
           {loading ? "Generating..." : "Submit" }
-        </button>
+        </button> */}
+
+        <button
+  type="submit"
+  disabled={loading}
+  className="bg-blue-600 text-white px-3 py-1 rounded"
+>
+  {loading ? "Generating..." : "Submit"}
+</button>
+
         <button className="bg-gray-400 text-white px-3 py-1 rounded">
           Reset
         </button>
@@ -591,7 +689,7 @@ return (
         </p>
       )}
     </fieldset>
-  </main>
+  </form>
 );
 
 }
