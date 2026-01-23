@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toBluedartDate } from "./lib/date";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -17,10 +18,10 @@ export default function Home() {
     shipperName: "XYZ Compnay.com",
     shipperAddress1:"123, 2nd Floor, Sai Residency",
     shipperAddress2:"4th Cross, 5th Main, Koramangala 4th Block",
-    shipperAddress3:"Bengaluru, Karnataka – 560034",
+    shipperAddress3:"Gurgaon, Haryana – 122001",
     shipperMobile: "9996665554",
     shipperTelephone:"",
-    shipperPincode: "560034",
+    shipperPincode: "122001",
     sender:"Mr. Rahul Sharma",
 
     // return address
@@ -204,7 +205,7 @@ useEffect(() => {
           ItemCount: 1,
           PDFOutputNotRequired: true,
           PackType: form.packType,
-          PickupDate: form.pickupDate,
+          PickupDate: toBluedartDate(form.pickupDate),
           PickupTime: form.pickupTime,
           PieceCount: form.pieceCount,
           ProductCode: form.productCode,
@@ -214,7 +215,7 @@ useEffect(() => {
           FavouringName:form.favouringName,
           IsChequeDD:form.isChequeDD,
           PayableAt:form.payableAt,
-          InvoiceDate:form.invoiceDate,
+          InvoiceDate:toBluedartDate(form.invoiceDate),
           InvoiceNumber:form.invoiceNumber,
 
           itemdtl: [
