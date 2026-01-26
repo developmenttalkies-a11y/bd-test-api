@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.dto.FailureRow;
 import org.springframework.web.client.HttpStatusCodeException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.example.demo.exception.BluedartApiException;
 
 import java.util.List;
 import java.util.Map;
@@ -86,7 +86,7 @@ try {
 
     String message = extractBluedartErrorMessage(errorBody);
 
-    throw new RuntimeException(message);
+    throw new BluedartApiException(message,errorBody);
 
 } catch (Exception e) {
     throw new RuntimeException("Unexpected error while calling Bluedart", e);

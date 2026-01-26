@@ -4523,4 +4523,122 @@
       "TransactionAmount" : 0
     }
   }
+}, {
+  "awbNo" : "20472091426",
+  "creditReferenceNo" : "reff01",
+  "createdAt" : "2026-01-26T04:30:37.151385585",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "AvailableDays" : "",
+        "AvailableTiming" : "",
+        "ConsigneeAddress1" : "This is my test address1",
+        "ConsigneeAddress2" : "This is my test address2",
+        "ConsigneeAddress3" : "This is my test address3",
+        "ConsigneeAttention" : "Anuradha",
+        "ConsigneeEmailID" : "",
+        "ConsigneeMobile" : "7060756956",
+        "ConsigneeName" : "Anuradha",
+        "ConsigneePincode" : "110019",
+        "ConsigneeTelephone" : ""
+      },
+      "Returnadds" : {
+        "ReturnAddress1" : "123, 2nd Floor, Sai Residency",
+        "ReturnAddress2" : "4th Cross, 5th Main, Koramangala 4th Block",
+        "ReturnAddress3" : "Gurgaon, Haryana – 122001",
+        "ReturnContact" : "XYZ Compnay.com",
+        "ReturnMobile" : "9996665554",
+        "ReturnPincode" : "122001"
+      },
+      "Services" : {
+        "AWBNo" : "",
+        "ActualWeight" : "1",
+        "CollectableAmount" : 0,
+        "Commodity" : {
+          "CommodityDetail1" : "Sofa",
+          "CommodityDetail2" : "",
+          "CommodityDetail3" : ""
+        },
+        "CreditReferenceNo" : "reff01",
+        "DeclaredValue" : 100,
+        "Dimensions" : [ {
+          "Length" : 50,
+          "Breadth" : 40,
+          "Height" : 30,
+          "Count" : 1
+        } ],
+        "IsReversePickup" : false,
+        "ItemCount" : 1,
+        "PDFOutputNotRequired" : true,
+        "PackType" : "",
+        "PickupDate" : "/Date(1769385600000)/",
+        "PickupTime" : "1600",
+        "PieceCount" : "1",
+        "ProductCode" : "D",
+        "ProductType" : 1,
+        "RegisterPickup" : true,
+        "SubProductCode" : "",
+        "FavouringName" : "",
+        "IsChequeDD" : "",
+        "PayableAt" : "",
+        "InvoiceDate" : "/Date(1769385600000)/",
+        "InvoiceNumber" : "1222",
+        "itemdtl" : [ {
+          "ItemName" : "Wooden material ",
+          "Itemquantity" : 1,
+          "ItemValue" : 0,
+          "TotalValue" : 0
+        } ],
+        "noOfDCGiven" : 0
+      },
+      "Shipper" : {
+        "CustomerAddress1" : "123, 2nd Floor, Sai Residency",
+        "CustomerAddress2" : "4th Cross, 5th Main, Koramangala 4th Block",
+        "CustomerAddress3" : "Gurgaon, Haryana – 122001",
+        "CustomerCode" : "940111",
+        "CustomerMobile" : "9996665554",
+        "CustomerTelephone" : "",
+        "CustomerName" : "XYZ Compnay.com",
+        "CustomerPincode" : "122001",
+        "IsToPayCustomer" : false,
+        "OriginArea" : "GGN",
+        "Sender" : "Mr. Rahul Sharma"
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+      "Api_type" : "S"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "20472091426",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "reff01",
+      "ClusterCode" : "",
+      "DestinationArea" : "DEL",
+      "DestinationLocation" : "NP",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "20472091426-0001",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "ShipmentPickupDate" : "/Date(1769365800000+0530)/",
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      }, {
+        "StatusCode" : "Pickup Registration:InsertFailure",
+        "StatusInformation" : "PickupIsAlreadyRegister"
+      } ],
+      "TokenNumber" : "31426798DEMO",
+      "TransactionAmount" : 0
+    }
+  }
 } ]

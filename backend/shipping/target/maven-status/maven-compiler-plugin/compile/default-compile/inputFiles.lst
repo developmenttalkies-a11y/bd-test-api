@@ -17,6 +17,7 @@
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/Profile.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/Request.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/TrackingResponse.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/exception/BluedartApiException.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/model/BlueDartError.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/model/WaybillRecord.java

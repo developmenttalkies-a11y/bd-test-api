@@ -21,6 +21,7 @@ com/example/demo/repository/WaybillFileRepository$1.class
 com/example/demo/dto/CancelWaybillRequest$Profile.class
 com/example/demo/service/CancelHistoryFileService$1.class
 com/example/demo/dto/CancelWaybillRequest$Request.class
+com/example/demo/exception/BluedartApiException.class
 com/example/demo/service/PickupService.class
 com/example/demo/dto/CancelWaybillResponse$CancelWaybillResult.class
 com/example/demo/config/WebClientConfig.class
