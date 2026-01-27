@@ -82,4 +82,32 @@
   "cancelledAt" : "2026-01-20T12:13:23.759778208",
   "source" : "SINGLE",
   "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472091043",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 20472091043 has been cancelled successfully",
+  "cancelledAt" : "2026-01-27T03:47:33.871621966",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "80149518234",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"80149518234\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-01-27T03:47:53.443098269",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "55150056640",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"55150056640\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-01-27T03:47:53.5662154",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472091496",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"20472091496\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-01-27T03:47:53.679287295",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
 } ]
