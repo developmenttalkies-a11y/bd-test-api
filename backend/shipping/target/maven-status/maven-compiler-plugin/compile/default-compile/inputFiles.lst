@@ -3,6 +3,7 @@
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/BluedartAuthController.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/BluedartWaybillController.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/PickupRegistrationController.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/ShipperProfileController.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/TrackingController.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/controller/WaybillHistoryController.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/BulkCancelResponse.java
@@ -15,7 +16,10 @@
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/FailureRow.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/PickupRequestDto.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/Profile.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/ProfileStore.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/Request.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/ShipperProfile.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/ShipperProfilePayload.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/dto/TrackingResponse.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/exception/BluedartApiException.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java
@@ -32,5 +36,7 @@
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/BulkWaybillTemplateService.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/CancelHistoryFileService.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/PickupService.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/ProfileFileService.java
+/workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/ShipperProfileFileService.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/WaybillCancellationService.java
 /workspaces/bd-test-api/backend/shipping/src/main/java/com/example/demo/service/WaybillPdfService.java

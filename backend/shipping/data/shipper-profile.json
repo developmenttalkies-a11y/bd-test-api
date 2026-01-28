@@ -1,0 +1,20 @@
+{
+  "shipper" : {
+    "CustomerCode" : "940111",
+    "OriginArea" : "GGN",
+    "CustomerName" : "Bluedart Express Ltd",
+    "CustomerAddress1" : "This is my test shipper address1",
+    "CustomerAddress2" : "This is my test shipper address2",
+    "CustomerAddress3" : "This is my test shipper address3",
+    "CustomerPincode" : "122001",
+    "CustomerMobile" : "7060756956",
+    "CustomerTelephone" : "",
+    "Sender" : "",
+    "IsToPayCustomer" : false
+  },
+  "profile" : {
+    "LoginID" : "GG940111",
+    "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+    "Api_type" : "S"
+  }
+}

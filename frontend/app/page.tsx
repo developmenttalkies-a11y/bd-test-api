@@ -33,6 +33,21 @@ const SERVICE_MAP: Record<
   SURFACE_DODFOD: { productCode: "E", subProductCode: "B" },
 };
 
+const mapShipperToForm = (shipper: any) => ({
+  customerCode: shipper.CustomerCode || "",
+  shipperName: shipper.CustomerName || "",
+  sender: shipper.Sender || "",
+  originArea: shipper.OriginArea || "",
+  shipperMobile: shipper.CustomerMobile || "",
+  shipperTelephone: shipper.CustomerTelephone || "",
+  shipperAddress1: shipper.CustomerAddress1 || "",
+  shipperAddress2: shipper.CustomerAddress2 || "",
+  shipperAddress3: shipper.CustomerAddress3 || "",
+  shipperPincode: shipper.CustomerPincode || "",
+  isTopay: shipper.IsToPayCustomer || false,
+});
+
+
 /* ================= COMPONENT ================= */
 
 export default function Home() {
@@ -41,6 +56,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isReturnAddressDiffrent, setIsReturnAddressDiffrent] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+
 
   /* ---------- FORM STATE ---------- */
 
@@ -98,6 +115,32 @@ export default function Home() {
     labelSize: "A4",
     isTopay: false,
   });
+
+
+  useEffect(() => {
+  fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/shipper-profile`)
+    .then(res => {
+      if (!res.ok) throw new Error("Profile fetch failed");
+      return res.json();
+    })
+    .then(data => {
+      if (!data) return;
+
+      if(data?.shipper) {
+        setForm(p => ({
+          ...p,
+          ...mapShipperToForm(data.shipper),
+        }));
+      }
+
+      setProfile(data.profile);
+    })
+    .catch(err => {
+      console.error("Shipper profile load error:", err);
+      setError("Failed to load shipper profile");
+    });
+}, []);
+
 
   /* ---------- DIMENSIONS ---------- */
 
@@ -188,6 +231,8 @@ const updateDimension = (
     if (!form.serviceType) e.serviceType = "Required";
     if (!form.weight) e.weight = "Required";
     if (!form.productType) e.productType = "Required";
+    if (!form.pieceCount) e.pieceCount = "Required";
+
    
     if (isDuts && !form.itemName) e.itemName = "Required";
     if (isDuts && !form.declaredValue) e.declaredValue = "Required";
@@ -222,6 +267,8 @@ const updateDimension = (
     `border h-8 px-2 rounded ${
       errors[name] ? "border-red-500 bg-red-50" : "border-gray-300"
     }`;
+
+    
 
   /* ---------- API ---------- */
 
@@ -266,6 +313,13 @@ const updateDimension = (
           ReturnMobile: form.shipperMobile,
           ReturnPincode: form.shipperPincode,
         };
+
+if (!profile) {
+  setError("Shipper profile not loaded");
+  setLoading(false);
+  return;
+}
+
 
     // 4️⃣ Build payload
     const payload = {
@@ -352,11 +406,7 @@ const updateDimension = (
         },
       },
 
-      Profile: {
-        LoginID: "GG940111",
-        LicenceKey: "kh7mnhqkmgegoksipxr0urmqesesseup",
-        Api_type: "S",
-      },
+      Profile: profile,
     };
 
     // 5️⃣ Call backend
@@ -423,8 +473,8 @@ const updateDimension = (
         value={form.originArea}
         onChange={handleChange}
         placeholder="OriginArea"
-        className={fieldClass("customerCode")}
-        max="3"
+        className={fieldClass("originArea")}
+        maxLength={3}
       />
       <input
         ref={registerRef}
@@ -963,7 +1013,7 @@ const updateDimension = (
           updateDimension(index, "length", e.target.value)
         }
         className={`border h-8 px-2 rounded ${
-          errors[`dimension_${index}`] ? "border-red-500 bg-red-50" : ""
+          errors[`length_${index}`] ? "border-red-500 bg-red-50" : ""
         }`}
       />
 
@@ -978,7 +1028,7 @@ const updateDimension = (
           updateDimension(index, "breadth", e.target.value)
         }
         className={`border h-8 px-2 rounded ${
-          errors[`dimension_${index}`] ? "border-red-500 bg-red-50" : ""
+          errors[`breadth_${index}`] ? "border-red-500 bg-red-50" : ""
         }`}
       />
 
@@ -993,7 +1043,7 @@ const updateDimension = (
           updateDimension(index, "height", e.target.value)
         }
         className={`border h-8 px-2 rounded ${
-          errors[`dimension_${index}`] ? "border-red-500 bg-red-50" : ""
+          errors[`height_${index}`] ? "border-red-500 bg-red-50" : ""
         }`}
       />
 
@@ -1070,8 +1120,8 @@ const updateDimension = (
   <button
     ref={registerRef}
     type="submit"
-    disabled={loading}
-    className="mt-6 bg-blue-600 text-white px-6 py-2 rounded"
+    disabled={loading || !profile}
+    className="mt-6 bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50"
   >
     {loading ? "Generating..." : "Submit"}
   </button>

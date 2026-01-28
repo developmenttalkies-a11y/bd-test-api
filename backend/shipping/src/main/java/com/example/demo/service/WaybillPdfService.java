@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.List;
+
 @Service
 public class WaybillPdfService {
 
@@ -137,6 +138,7 @@ public class WaybillPdfService {
         Map<String, Object> shipper = (Map<String, Object>) request.get("Shipper");
         Map<String, Object> consignee = (Map<String, Object>) request.get("Consignee");
         Map<String, Object> services = (Map<String, Object>) request.get("Services");
+        Map<String, Object> returnadds = (Map<String, Object>) request.get("Returnadds");
 
         /* ---------- Meta ---------- */
         PdfPTable meta = new PdfPTable(2);
@@ -171,12 +173,13 @@ public class WaybillPdfService {
         PdfPTable service = new PdfPTable(1);
         service.setWidthPercentage(100);
 
-        service.addCell(sectionCell("SERVICES", sectionFont));
+        service.addCell(sectionCell("SHIPMENT DETAILS", sectionFont));
         service.addCell(serviceDetailsCell(services, valueFont));
 
         block.addCell(service);
 
         block.addCell(getCODAmountMessageCell(services, valueFont));
+
 
         /* ---------- Barcode ---------- */
         Image barcode = barcodeImage(record.getAwbNo());
@@ -194,8 +197,24 @@ public class WaybillPdfService {
         barcodeCell.addElement(barcode);
         barcodeCell.addElement(awbText);
         block.addCell(barcodeCell);
+
+        
+        /* ---------- Return Address ---------- */
+        PdfPTable returnAddress = new PdfPTable(1);
+        returnAddress.setWidthPercentage(100);
+        block.addCell(undeliveredMessageCell(returnadds, valueFont));
+
+        //service.addCell(sectionCell("SHIPMENT DETAILS", sectionFont));
+        returnAddress.addCell(returnDetailsCell(returnadds, valueFont));
+
+        block.addCell(returnAddress);
+
         return block;
+
+
     }
+
+    
 
     /* ================= HELPERS ================= */
 
@@ -213,30 +232,47 @@ public class WaybillPdfService {
     }
 
     private PdfPCell shipperDetailsCell(Map<String, Object> shipper, Font font) {
-        String text =
-                safe(shipper, "CustomerName") + "\n" +
-                "Mob: " + safe(shipper, "CustomerMobile") + "\n" +
-                safe(shipper, "CustomerAddress1") + ", " +
-                safe(shipper, "CustomerCity") + " - " +
-                safe(shipper, "CustomerPincode");
+    String text =
+            safe(shipper, "CustomerName") + "\n" +
+            "Mob: " + safe(shipper, "CustomerMobile") + "\n" +
+            safe(shipper, "CustomerAddress1") + "\n" +
+            safe(shipper, "CustomerAddress2") + "\n" +
+            safe(shipper, "CustomerAddress3") + " - " +
+            safe(shipper, "CustomerPincode");
 
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(4);
-        return cell;
-    }
+    PdfPCell cell = new PdfPCell(new Phrase(text, font));
+    cell.setPadding(4);
+    return cell;
+}
+
+
+    private PdfPCell returnDetailsCell(Map<String, Object> returnadds, Font font) {
+    String text =
+            safe(returnadds, "ReturnContact") + " "+
+            safe(returnadds, "ReturnAddress1") + " " +
+            safe(returnadds, "ReturnAddress2") + " " +
+            safe(returnadds, "ReturnAddress3") + " - " +
+            safe(returnadds, "ReturnPincode") +
+            " Mob: " + safe(returnadds, "ReturnMobile") ;
+
+    PdfPCell cell = new PdfPCell(new Phrase(text, font));
+    cell.setPadding(5);
+    return cell;
+}
 
     private PdfPCell consigneeDetailsCell(Map<String, Object> consignee, Font font) {
-        String text =
-                safe(consignee, "ConsigneeName") + "\n" +
-                "Mob: " + safe(consignee, "ConsigneeMobile") + "\n" +
-                safe(consignee, "ConsigneeAddress1") + ", " +
-                safe(consignee, "ConsigneeCity") + " - " +
-                safe(consignee, "ConsigneePincode");
+    String text =
+            safe(consignee, "ConsigneeName") + "\n" +
+            "Mob: " + safe(consignee, "ConsigneeMobile") + "\n" +
+            safe(consignee, "ConsigneeAddress1") + "\n" +
+            safe(consignee, "ConsigneeAddress2") + "\n" +
+            safe(consignee, "ConsigneeAddress3") + " - " +
+            safe(consignee, "ConsigneePincode");
 
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(4);
-        return cell;
-    }
+    PdfPCell cell = new PdfPCell(new Phrase(text, font));
+    cell.setPadding(4);
+    return cell;
+}
 
 
 
@@ -268,6 +304,18 @@ public class WaybillPdfService {
     //String text = "Amount to be collected : ₹" + codAmount;
 
     PdfPCell cell = new PdfPCell(new Phrase("Amount to be collected : ₹" + codAmount, fontBold));
+    cell.setPadding(4);
+    return cell;
+}
+
+
+private PdfPCell undeliveredMessageCell(Map<String, Object> returnAddress, Font font) {
+
+    Font fontBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9);
+
+    //String text = "Amount to be collected : ₹" + codAmount;
+
+    PdfPCell cell = new PdfPCell(new Phrase("If undelivered return to :" , fontBold));
     cell.setPadding(4);
     return cell;
 }
