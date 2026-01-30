@@ -4863,4 +4863,226 @@
       "TransactionAmount" : 0
     }
   }
+}, {
+  "awbNo" : "80149520231",
+  "creditReferenceNo" : "reff01111",
+  "createdAt" : "2026-01-30T03:45:11.549958082",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "ConsigneeName" : "yogesh",
+        "ConsigneeAttention" : "yogesh",
+        "ConsigneeMobile" : "7060756956",
+        "ConsigneeTelephone" : "",
+        "ConsigneeAddress1" : "This is my test address1",
+        "ConsigneeAddress2" : "This is my test address2",
+        "ConsigneeAddress3" : "This is my test address3",
+        "ConsigneePincode" : "248001"
+      },
+      "Returnadds" : {
+        "ReturnAddress1" : "This is my test shipper address1",
+        "ReturnAddress2" : "This is my test shipper address2",
+        "ReturnAddress3" : "This is my test shipper address3",
+        "ReturnContact" : "Bluedart Express Ltd",
+        "ReturnMobile" : "7060756956",
+        "ReturnPincode" : "122001"
+      },
+      "Services" : {
+        "ProductCode" : "A",
+        "SubProductCode" : "C",
+        "PackType" : "",
+        "ProductType" : 1,
+        "PieceCount" : 1,
+        "ActualWeight" : 1,
+        "DeclaredValue" : 10000,
+        "CollectableAmount" : 10000,
+        "PickupDate" : "/Date(1769731200000)/",
+        "PickupTime" : "1600",
+        "CreditReferenceNo" : "reff01111",
+        "InvoiceNumber" : "1222",
+        "InvoiceDate" : "/Date(1769731200000)/",
+        "FavouringName" : "",
+        "IsChequeDD" : "",
+        "PayableAt" : "",
+        "Dimensions" : [ {
+          "Length" : 10,
+          "Breadth" : 10,
+          "Height" : 10,
+          "Count" : 1
+        } ],
+        "Commodity" : {
+          "CommodityDetail1" : "xyz",
+          "CommodityDetail2" : "xyz",
+          "CommodityDetail3" : "xyz"
+        },
+        "itemdtl" : [ {
+          "ItemName" : "xyz",
+          "Itemquantity" : 1,
+          "ItemValue" : 1,
+          "TotalValue" : 1
+        } ],
+        "RegisterPickup" : true,
+        "PDFOutputNotRequired" : true
+      },
+      "Shipper" : {
+        "CustomerCode" : "940111",
+        "CustomerName" : "Bluedart Express Ltd",
+        "Sender" : "Mr. Rahul Sharma",
+        "OriginArea" : "GGN",
+        "CustomerMobile" : "7060756956",
+        "CustomerTelephone" : "",
+        "CustomerAddress1" : "This is my test shipper address1",
+        "CustomerAddress2" : "This is my test shipper address2",
+        "CustomerAddress3" : "This is my test shipper address3",
+        "CustomerPincode" : "122001",
+        "IsToPayCustomer" : false
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+      "Api_type" : "S"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "80149520231",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "reff01111",
+      "ClusterCode" : "DRO",
+      "DestinationArea" : "DRD",
+      "DestinationLocation" : "DRO",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "80149520231-0001",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "ShipmentPickupDate" : "/Date(1769711400000+0530)/",
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      }, {
+        "StatusCode" : "Pickup Registration:InsertFailure",
+        "StatusInformation" : "PickupIsAlreadyRegister"
+      } ],
+      "TokenNumber" : "31470807DEMO",
+      "TransactionAmount" : 0
+    }
+  }
+}, {
+  "awbNo" : "20472092782",
+  "creditReferenceNo" : "reff01112",
+  "createdAt" : "2026-01-30T03:45:48.702416126",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "ConsigneeName" : "yogesh",
+        "ConsigneeAttention" : "yogesh",
+        "ConsigneeMobile" : "7060756956",
+        "ConsigneeTelephone" : "",
+        "ConsigneeAddress1" : "This is my test address1",
+        "ConsigneeAddress2" : "This is my test address2",
+        "ConsigneeAddress3" : "This is my test address3",
+        "ConsigneePincode" : "248001"
+      },
+      "Returnadds" : {
+        "ReturnAddress1" : "This is my test shipper address1",
+        "ReturnAddress2" : "This is my test shipper address2",
+        "ReturnAddress3" : "This is my test shipper address3",
+        "ReturnContact" : "Bluedart Express Ltd",
+        "ReturnMobile" : "7060756956",
+        "ReturnPincode" : "122001"
+      },
+      "Services" : {
+        "ProductCode" : "D",
+        "SubProductCode" : "",
+        "PackType" : "",
+        "ProductType" : 1,
+        "PieceCount" : 1,
+        "ActualWeight" : 1,
+        "DeclaredValue" : 10000,
+        "CollectableAmount" : 0,
+        "PickupDate" : "/Date(1769731200000)/",
+        "PickupTime" : "1600",
+        "CreditReferenceNo" : "reff01112",
+        "InvoiceNumber" : "1222",
+        "InvoiceDate" : "/Date(1769731200000)/",
+        "FavouringName" : "",
+        "IsChequeDD" : "",
+        "PayableAt" : "",
+        "Dimensions" : [ {
+          "Length" : 10,
+          "Breadth" : 10,
+          "Height" : 10,
+          "Count" : 1
+        } ],
+        "Commodity" : {
+          "CommodityDetail1" : "xyz",
+          "CommodityDetail2" : "xyz",
+          "CommodityDetail3" : "xyz"
+        },
+        "itemdtl" : [ {
+          "ItemName" : "xyz",
+          "Itemquantity" : 1,
+          "ItemValue" : 1,
+          "TotalValue" : 1
+        } ],
+        "RegisterPickup" : true,
+        "PDFOutputNotRequired" : true
+      },
+      "Shipper" : {
+        "CustomerCode" : "940111",
+        "CustomerName" : "Bluedart Express Ltd",
+        "Sender" : "Mr. Rahul Sharma",
+        "OriginArea" : "GGN",
+        "CustomerMobile" : "7060756956",
+        "CustomerTelephone" : "",
+        "CustomerAddress1" : "This is my test shipper address1",
+        "CustomerAddress2" : "This is my test shipper address2",
+        "CustomerAddress3" : "This is my test shipper address3",
+        "CustomerPincode" : "122001",
+        "IsToPayCustomer" : false
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup",
+      "Api_type" : "S"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "20472092782",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "reff01112",
+      "ClusterCode" : "",
+      "DestinationArea" : "DRD",
+      "DestinationLocation" : "DRO",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "20472092782-0001",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "ShipmentPickupDate" : "/Date(1769711400000+0530)/",
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      }, {
+        "StatusCode" : "Pickup Registration:Valid",
+        "StatusInformation" : "31472784DEMO"
+      } ],
+      "TokenNumber" : "31472784DEMO",
+      "TransactionAmount" : 0
+    }
+  }
 } ]
