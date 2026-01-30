@@ -457,7 +457,7 @@ if (!profile) {
     generateWaybill();
   }}
 >
-  <h1 className="text-2xl font-bold text-center mb-6">
+  <h1 className="text-2xl font-bold text-center mb-3">
     Book A Shipment
   </h1>
 
@@ -465,7 +465,7 @@ if (!profile) {
   <fieldset className="border p-4 mb-4">
     <legend className="font-semibold px-2">Shipper</legend>
 
-    <div className="grid grid-cols-3 gap-3 mb-3">
+    <div className="grid grid-cols-4 gap-3 mb-1">
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -482,8 +482,9 @@ if (!profile) {
         name="customerCode"
         value={form.customerCode}
         onChange={handleChange}
-        placeholder="Customer Code"
+        placeholder="CustCode"
         className={fieldClass("customerCode")}
+        maxLength={6}
       />
 
       <input
@@ -510,7 +511,7 @@ if (!profile) {
     <fieldset className="border p-3">
       <legend className="px-2">Pickup Address</legend>
 
-      <div className="grid grid-cols-4 gap-3 mb-3">
+      <div className="grid grid-cols-5 gap-3 mb-3">
         <input ref={registerRef} onKeyDown={handleKeyDown}
           name="shipperAddress1"
           value={form.shipperAddress1}
@@ -538,6 +539,7 @@ if (!profile) {
           onChange={handleChange}
           placeholder="Pincode"
           className="border h-8 px-2 rounded"
+          maxLength={6}
         />
 
         <input ref={registerRef} onKeyDown={handleKeyDown}
@@ -574,7 +576,7 @@ if (!profile) {
       </label>
 
       {isReturnAddressDiffrent && (
-        <div className="grid grid-cols-4 gap-3 mt-3">
+        <div className="grid grid-cols-3 gap-3 mt-3">
           <input ref={registerRef} 
           onKeyDown={handleKeyDown} 
           name="returnContact" 
@@ -612,6 +614,7 @@ if (!profile) {
             placeholder="Return Pincode"
             onChange={handleChange}
             className="border h-8 px-2 rounded"
+            maxLength={6}
           />
         </div>
       )}
@@ -625,7 +628,7 @@ if (!profile) {
     <div className="grid grid-cols-2 gap-3 mb-3">
       <input ref={registerRef} onKeyDown={handleKeyDown}
         name="consigneeName"
-        placeholder="Consignee Name"
+        placeholder="Company Name"
         onChange={handleChange}
         className={fieldClass("consigneeName")}
       />
@@ -637,7 +640,7 @@ if (!profile) {
       />
     </div>
 
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-5 gap-3">
       <input ref={registerRef} onKeyDown={handleKeyDown}
         name="consigneeAddr1"
         placeholder="Address 1"
@@ -661,6 +664,7 @@ if (!profile) {
         placeholder="Pincode"
         onChange={handleChange}
         className={fieldClass("consigneePincode")}
+        maxLength={6}
       />
 
       <input
@@ -676,22 +680,24 @@ if (!profile) {
     </div>
   </fieldset>
 
-  {/* ================= SERVICE / PRODUCT ================= */}
+ {/* ================= SERVICE / PRODUCT ================= */}
 <fieldset className="border p-4 mb-4">
   <legend className="font-semibold px-2">Service & Product</legend>
 
-  <div className="grid grid-cols-3 gap-4">
+  <div className="grid grid-cols-12 gap-4">
 
     {/* Service Type */}
-    <div>
-      <label className="text-xs font-semibold">Service Type *</label>
+    <div className="col-span-5 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Service Type *
+      </label>
       <select
         ref={registerRef}
         onKeyDown={handleKeyDown}
         name="serviceType"
         value={form.serviceType}
         onChange={handleChange}
-        className={fieldClass("serviceType")}
+        className={`${fieldClass("serviceType")} w-full`}
       >
         <option value="">Select Service</option>
 
@@ -737,15 +743,17 @@ if (!profile) {
     </div>
 
     {/* Shipment Type */}
-    <div>
-      <label className="text-xs font-semibold">Shipment Type *</label>
+    <div className="col-span-3 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Shipment Type *
+      </label>
       <select
         ref={registerRef}
         onKeyDown={handleKeyDown}
         name="productType"
         value={form.productType}
         onChange={handleChange}
-        className={fieldClass("productType")}
+        className={`${fieldClass("productType")} w-full`}
       >
         <option value="">Select</option>
         <option value="0">DOX</option>
@@ -754,8 +762,10 @@ if (!profile) {
     </div>
 
     {/* Label Size */}
-    <div className="relative">
-      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">Label Size</label>
+    <div className="col-span-4 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Label Size
+      </label>
       <select
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -765,7 +775,7 @@ if (!profile) {
         className="border h-8 px-2 rounded w-full"
       >
         <option value="A4">A4</option>
-        <option value="LABEL_4X6">4 x 6</option>
+        <option value="LABEL_4X6">4 × 6</option>
       </select>
     </div>
 
@@ -910,13 +920,14 @@ if (!profile) {
     )}
   </fieldset>
 
-  {/* ================= ITEM DETAILS ================= */}
+{/* ================= ITEM DETAILS ================= */}
 {isDuts && (
   <fieldset className="border p-4 mb-4">
     <legend className="font-semibold px-2">Item Details</legend>
 
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-6 gap-3 items-center">
 
+      {/* Item Name */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -927,6 +938,7 @@ if (!profile) {
         className={fieldClass("itemName")}
       />
 
+      {/* Qty */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -939,6 +951,7 @@ if (!profile) {
         className="border h-8 px-2 rounded"
       />
 
+      {/* Item Value */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -951,18 +964,18 @@ if (!profile) {
         className="border h-8 px-2 rounded"
       />
 
+      {/* Commodity 1 */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
         name="comodityDetails1"
-        placeholder="Commodity Details"
+        placeholder="Commodity Details 1"
         value={form.comodityDetails1}
         onChange={handleChange}
         className="border h-8 px-2 rounded"
       />
-    </div>
 
-    <div className="grid grid-cols-2 gap-3 mt-3">
+      {/* Commodity 2 */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -973,6 +986,7 @@ if (!profile) {
         className="border h-8 px-2 rounded"
       />
 
+      {/* Commodity 3 */}
       <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
@@ -991,6 +1005,7 @@ if (!profile) {
     )}
   </fieldset>
 )}
+
 
 
   {/* ================= PACKAGE DIMENSIONS ================= */}
