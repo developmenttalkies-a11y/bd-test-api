@@ -110,4 +110,39 @@
   "cancelledAt" : "2026-01-27T03:47:53.679287295",
   "source" : "BULK",
   "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472092782",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 20472092782 has been cancelled successfully",
+  "cancelledAt" : "2026-01-31T12:07:49.035555425",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "80149520231",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 80149520231 has been cancelled successfully",
+  "cancelledAt" : "2026-01-31T12:07:49.189978842",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "80149519564",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 80149519564 has been cancelled successfully",
+  "cancelledAt" : "2026-01-31T12:07:49.315412115",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "80149519542",
+  "status" : "SUCCESS",
+  "message" : "Your registered shipment 80149519542 has been cancelled successfully",
+  "cancelledAt" : "2026-01-31T12:07:49.442169892",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472092782",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"20472092782\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-01-31T12:08:36.986063357",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
 } ]

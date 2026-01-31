@@ -10,7 +10,7 @@ const menu = [
   { label: "Tracking", href: "/tracking" },
   { label: "Cancel Waybill", href: "/cancel-waybill" },
   { label: "Bulk Booking", href: "/bulk-waybill" },
-  { label: "Register Pickup", href: "/pickup-register" },
+  { label: "Register Pickup", href: "/register-pickup" },
   { label: "Reports", href: "/reports" },
 ];
 

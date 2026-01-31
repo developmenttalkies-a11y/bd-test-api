@@ -91,70 +91,77 @@ export default function CancelWaybillPage() {
   };
 
   return (
-    <div className="m-6 max-w-4xl">
-      <h1 className="text-2xl font-bold mb-6">Cancel Waybill</h1>
+  <div className="mx-auto max-w-3xl p-6">
+    {/* PAGE TITLE */}
+    <h1 className="text-3xl font-bold mb-6 tracking-tight">Cancel Waybill</h1>
 
-      {/* -------- MODE TOGGLE -------- */}
-      <div className="flex gap-4 mb-6">
+    {/* MODE SWITCH */}
+    <div className="mb-6">
+      <div className="inline-flex rounded-lg border bg-gray-100 p-1">
         <button
           onClick={() => setMode("single")}
-          className={`px-4 py-2 rounded ${
-            mode === "single"
-              ? "bg-green-600 text-white"
-              : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition
+            ${mode === "single" ? "bg-green-600 text-white" : "text-gray-700 hover:bg-gray-200"}`}
         >
           Single AWB
         </button>
 
         <button
           onClick={() => setMode("bulk")}
-          className={`px-4 py-2 rounded ${
-            mode === "bulk"
-              ? "bg-green-600 text-white"
-              : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition
+            ${mode === "bulk" ? "bg-green-600 text-white" : "text-gray-700 hover:bg-gray-200"}`}
         >
           Bulk Upload
         </button>
       </div>
+    </div>
 
-      {/* -------- SINGLE CANCEL -------- */}
-      {mode === "single" && (
-        <div>
-          <input
-            type="text"
-            value={awbNo}
-            onChange={(e) => setAwbNo(e.target.value)}
-            placeholder="Enter AWB Number"
-            className="p-2 border rounded w-64"
-            minLength={10}
-          />
+    {/* -------------------------------- SINGLE CANCEL -------------------------------- */}
+    {mode === "single" && (
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          AWB Number
+        </label>
 
-          <div>
-            <button
-              onClick={cancelWaybill}
-              className="mt-3 bg-green-600 text-white px-4 py-2 rounded"
-            >
-              Cancel Waybill
-            </button>
-          </div>
+        <input
+          type="text"
+          value={awbNo}
+          onChange={(e) => setAwbNo(e.target.value)}
+          placeholder="Enter 10–12 digit AWB"
+          className="w-72 h-10 rounded-md border border-gray-300 px-3 shadow-sm text-sm
+                     outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition"
+        />
 
-          {message && <p className="mt-3">{message}</p>}
-        </div>
-      )}
+        <button
+          onClick={cancelWaybill}
+          className="mt-5 bg-green-600 text-white px-5 py-2.5 rounded-md text-sm font-semibold
+                     shadow hover:bg-green-700 transition"
+        >
+          Cancel Waybill
+        </button>
 
-      {/* -------- BULK CANCEL -------- */}
-      {mode === "bulk" && (
-        <div>
-          <button
-            onClick={downloadTemplate}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            ⬇️ Download Template
-          </button>
+        {message && (
+          <p className="mt-4 text-sm font-medium text-blue-700">{message}</p>
+        )}
+      </div>
+    )}
 
-          <div className="flex items-center gap-3 mt-5">
+    {/* -------------------------------- BULK CANCEL -------------------------------- */}
+    {mode === "bulk" && (
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <button
+          onClick={downloadTemplate}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold shadow
+                     hover:bg-blue-700 transition"
+        >
+          ⬇️ Download Template
+        </button>
+
+        {/* FILE SELECT */}
+        <div className="mt-5">
+          <label className="text-sm font-medium text-gray-700">Upload Excel File</label>
+
+          <div className="mt-2 flex items-center gap-3">
             <input
               id="bulkFile"
               type="file"
@@ -165,54 +172,64 @@ export default function CancelWaybillPage() {
 
             <label
               htmlFor="bulkFile"
-              className="cursor-pointer bg-gray-200 px-4 py-2 rounded"
+              className="cursor-pointer bg-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 transition"
             >
-              Browse…
+              Select File
             </label>
 
-            <span className="text-sm">
+            <span className="text-sm text-gray-600">
               {file ? file.name : "No file selected"}
             </span>
           </div>
-
-          <button
-            onClick={handleUpload}
-            disabled={loading}
-            className="mt-5 bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60"
-          >
-            Upload & Cancel
-          </button>
-
-          {loading && <p>Uploading... {progress}%</p>}
-
-          {result && (
-            <div className="mt-6">
-              <p>Total: {result.total}</p>
-              <p>Success: {result.success}</p>
-              <p>Failed: {result.failed}</p>
-
-              <table className="mt-3 border">
-                <thead>
-                  <tr>
-                    <th>AWB No</th>
-                    <th>Status</th>
-                    <th>Message</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.results.map((r: any, i: number) => (
-                    <tr key={i}>
-                      <td>{r.awbNo}</td>
-                      <td>{r.status}</td>
-                      <td>{r.message}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
-      )}
-    </div>
-  );
+
+        {/* UPLOAD BUTTON */}
+        <button
+          onClick={handleUpload}
+          disabled={loading}
+          className="mt-6 bg-blue-600 text-white px-6 py-2.5 rounded-md text-sm font-semibold shadow
+                     hover:bg-blue-700 disabled:opacity-50 transition"
+        >
+          Upload & Cancel
+        </button>
+
+        {loading && (
+          <p className="mt-3 text-sm text-gray-600">
+            Uploading… {progress}%
+          </p>
+        )}
+
+        {/* RESULTS TABLE */}
+        {result && (
+          <div className="mt-8">
+            <p className="font-semibold">Summary</p>
+            <p className="text-sm mt-1">Total: {result.total}</p>
+            <p className="text-sm">Success: {result.success}</p>
+            <p className="text-sm">Failed: {result.failed}</p>
+
+            <table className="mt-4 w-full text-sm border rounded-lg overflow-hidden">
+              <thead className="bg-gray-100 text-left">
+                <tr>
+                  <th className="border px-3 py-2">AWB No</th>
+                  <th className="border px-3 py-2">Status</th>
+                  <th className="border px-3 py-2">Message</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {result.results.map((r, i) => (
+                  <tr key={i} className="hover:bg-gray-50">
+                    <td className="border px-3 py-2">{r.awbNo}</td>
+                    <td className="border px-3 py-2">{r.status}</td>
+                    <td className="border px-3 py-2">{r.message}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+);
 }

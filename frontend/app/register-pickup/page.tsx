@@ -122,95 +122,160 @@ export default function Pickup() {
   };
 
   return (
-    <div style={{ maxWidth: 400 }}>
-      <h1>Register Pickup</h1>
+  <div className="mx-auto max-w-xl p-6">
+    {/* PAGE TITLE */}
+    <h1 className="text-3xl font-bold tracking-tight mb-6">
+      Register Pickup
+    </h1>
 
-      <input
-        placeholder="Customer Code"
-        value={form.customerCode}
-        onChange={(e) =>
-          setForm({ ...form, customerCode: e.target.value })
-        }
-      />
+    <div className="rounded-lg border bg-white shadow-sm p-6 space-y-5">
 
-      <input
-        placeholder="Pincode"
-        value={form.customerPincode}
-        onChange={(e) =>
-          setForm({ ...form, customerPincode: e.target.value })
-        }
-      />
+      {/* FORM GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-      <input
-        placeholder="Contact Person Name"
-        value={form.contactPersonName}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            contactPersonName: e.target.value,
-          })
-        }
-      />
+        {/* Customer Code */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Customer Code
+          </label>
+          <input
+            placeholder="Customer Code"
+            value={form.customerCode}
+            onChange={(e) =>
+              setForm({ ...form, customerCode: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
-        <input
-        placeholder="CustomerAddress1"
-        value={form.customerAddress1}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            customerAddress1: e.target.value,
-          })
-        }
-      />
+        {/* Pincode */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Pincode
+          </label>
+          <input
+            placeholder="Pincode"
+            value={form.customerPincode}
+            onChange={(e) =>
+              setForm({ ...form, customerPincode: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
-        <input
-        placeholder="CustomerAddress2"
-        value={form.customerAddress2}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            customerAddress2: e.target.value,
-          })
-        }
-      />
+        {/* Contact Person */}
+        <div className="flex flex-col md:col-span-2">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Contact Person Name
+          </label>
+          <input
+            placeholder="Contact Person Name"
+            value={form.contactPersonName}
+            onChange={(e) =>
+              setForm({ ...form, contactPersonName: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
-        <input
-        placeholder="CustomerAddress3"
-        value={form.customerAddress3}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            customerAddress3: e.target.value,
-          })
-        }
-      />
+        {/* Address 1 */}
+        <div className="flex flex-col md:col-span-2">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Address Line 1
+          </label>
+          <input
+            placeholder="Address Line 1"
+            value={form.customerAddress1}
+            onChange={(e) =>
+              setForm({ ...form, customerAddress1: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
-      <input
-        placeholder="WeightOfShipment"
-        value={form.shipmentWeight}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            shipmentWeight: parseFloat(e.target.value),
-          })
-        }
-      />
+        {/* Address 2 */}
+        <div className="flex flex-col md:col-span-2">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Address Line 2
+          </label>
+          <input
+            placeholder="Address Line 2"
+            value={form.customerAddress2}
+            onChange={(e) =>
+              setForm({ ...form, customerAddress2: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
-      <input
-        placeholder="No Of Piece"
-        value={form.noOfPiece}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            noOfPiece: Number(e.target.value),
-          })
-        }
-      />
+        {/* Address 3 */}
+        <div className="flex flex-col md:col-span-2">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Address Line 3
+          </label>
+          <input
+            placeholder="Address Line 3"
+            value={form.customerAddress3}
+            onChange={(e) =>
+              setForm({ ...form, customerAddress3: e.target.value })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
 
+        {/* Shipment Weight */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            Weight of Shipment (kg)
+          </label>
+          <input
+            placeholder="Weight (kg)"
+            value={form.shipmentWeight}
+            onChange={(e) =>
+              setForm({ ...form, shipmentWeight: parseFloat(e.target.value) })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+            type="number"
+          />
+        </div>
 
-      <button onClick={submit} disabled={loading}>
-        {loading ? "Submitting..." : "Submit"}
+        {/* No of Pieces */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">
+            No. of Pieces
+          </label>
+          <input
+            placeholder="No. of Pieces"
+            value={form.noOfPiece}
+            onChange={(e) =>
+              setForm({ ...form, noOfPiece: Number(e.target.value) })
+            }
+            className="h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+            type="number"
+          />
+        </div>
+
+      </div>
+
+      {/* SUBMIT BUTTON */}
+      <button
+        onClick={submit}
+        disabled={loading}
+        className="w-full h-11 bg-green-600 text-white rounded-md text-sm font-semibold shadow
+                   hover:bg-green-700 transition disabled:opacity-50"
+      >
+        {loading ? "Submitting…" : "Submit Pickup"}
       </button>
+
     </div>
-  );
+  </div>
+);
 }
