@@ -104,19 +104,36 @@ public class WaybillPdfService {
 
  /* ---------- Logo ---------- */
 
-        Image logo=loadLogo();
-        logo.scaleToFit(60, 40);
-        logo.setAlignment(Image.ALIGN_CENTER);
+        // Image logo=loadLogo();
+        // logo.scaleToFit(60, 40);
+        // logo.setAlignment(Image.ALIGN_CENTER);
 
-        PdfPCell logoCell = new PdfPCell(logo);
-        logoCell.setBorder(Rectangle.NO_BORDER);
-        logoCell.setPadding(4);
-        headerTable.addCell(logoCell);
+        Image logo = loadLogo();
+        if (logo != null) {
+            logo.scaleToFit(60, 40);
 
-        PdfPCell companyNameCell = new PdfPCell(new Paragraph("Development Talkies", titleFont));
-        companyNameCell.setBorder(Rectangle.NO_BORDER);
-        companyNameCell.setPadding(4);
-        headerTable.addCell(companyNameCell);
+            PdfPCell logoCell = new PdfPCell(logo);
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            logoCell.setPadding(4);
+
+            headerTable.addCell(logoCell);
+        } else {
+            // Empty cell to keep layout intact
+            PdfPCell empty = new PdfPCell(new Phrase(""));
+            empty.setBorder(Rectangle.NO_BORDER);
+            headerTable.addCell(empty);
+        }
+
+
+        // PdfPCell logoCell = new PdfPCell(logo);
+        // logoCell.setBorder(Rectangle.NO_BORDER);
+        // logoCell.setPadding(4);
+        // headerTable.addCell(logoCell);
+
+        // PdfPCell companyNameCell = new PdfPCell(new Paragraph("Development Talkies", titleFont));
+        // companyNameCell.setBorder(Rectangle.NO_BORDER);
+        // companyNameCell.setPadding(4);
+        // headerTable.addCell(companyNameCell);
 
         PdfPCell headerCell = new PdfPCell(headerTable);
         headerCell.setBorder(Rectangle.NO_BORDER);
@@ -155,6 +172,8 @@ public class WaybillPdfService {
         // addCell(meta, getOrderType(services).equals("C") ? "COD" : "Prepaid", valueFont);
         addCell(meta, "Order Type", labelFont);
         addCell(meta, getOrderTypeLabel(services), valueFont);
+
+        System.out.println("\nPack Type: " + getPackType(services)+"\n");
 
         addCell(meta, "Reference", labelFont);
         addCell(meta, record.getCreditReferenceNo(), valueFont);
@@ -247,23 +266,58 @@ block.addCell(getCollectionMode(services).equals("NA") ? new PdfPCell(new Phrase
 
 private String getOrderTypeLabel(Map<String, Object> services) {
 
-    String orderType = getOrderType(services); // SubProductCode
+   
+    String productCode = getProductCode(services); // ProductCode
+    String subProductCode = getOrderType(services); // SubProductCode
+    String packType = getPackType(services); // PackType
+    String serviceType="NA";
 
-    if (orderType == null) {
-        return "PREPAID";
+    if(!productCode.equals("NA") && !subProductCode.equals("NA") && !packType.equals("NA")){
+        serviceType = productCode+subProductCode+packType;
+    }else if(!productCode.equals("NA") && !subProductCode.equals("NA")){
+        serviceType = productCode+subProductCode;
+    }else if(!productCode.equals("NA")){
+        serviceType = productCode;
+    }else{
+        serviceType = "";
+    }
+    
+
+    System.out.println("\nService Type: " + serviceType+"\n");
+
+    if (serviceType == null || serviceType.equals("")) {
+        return "";
     }
 
-    switch (orderType.toUpperCase()) {
-        case "C":
-            return "COD";
+    switch (serviceType.toUpperCase()) {
+        case "ACL":
+            return "BHARAT_DART_COD";
+        case "APL":
+            return "BHARAT_DART_PREPAID";
+        case "AC":
+            return "ETAIL_APEX_COD";
+        case "AP":
+            return "ETAIL_APEX_PREPAID";
+        case "EC":
+            return "ETAIL_SURFACE_COD";
+        case "EP":
+            return "ETAIL_SURFACE_PREPAID";
+        case "AD":
+            return "APEX_DOD";
+        case "ED":
+            return "SURFACE_DOD";
+        case "AA":
+            return "APEX_FOD";
+        case "EA":
+            return "SURFACE_FOD";
         case "A":
-            return "FOD";
+            return "B2B_APEX";
+        case "E":
+            return "B2B_SURFACE";
         case "D":
-            return "DOD";
-        case "B":
-            return "FOD + DOD";
+            return "DOMESTIC PRIORITY";             
         default:
-            return "PREPAID";
+            return "";
     }
 }
 
@@ -419,6 +473,18 @@ private String getOrderType(Map<String, Object> services) {
 }
 
 
+private String getPackType(Map<String, Object> services) {   
+    Object packType = services.get("PackType");
+    return packType == null ? "NA" : packType.toString(); 
+}
+
+private String getProductCode(Map<String, Object> services) {   
+    Object productCode = services.get("ProductCode");
+    return productCode == null ? "NA" : productCode.toString(); 
+}
+
+
+
     private Image barcodeImage(String text) throws Exception {
         BitMatrix matrix = new MultiFormatWriter()
                 .encode(text, BarcodeFormat.CODE_128, 300, 60);
@@ -445,11 +511,29 @@ private String getOrderType(Map<String, Object> services) {
         return val == null ? "NA" : val.toString();
     }
 
-    private Image loadLogo() throws Exception {
-        // Load logo from resources
-        InputStream is=new ClassPathResource("static/logo.png").getInputStream();
+    // private Image loadLogo() throws Exception {
+    //     // Load logo from resources
+    //     InputStream is=new ClassPathResource("static/logo.png").getInputStream();
+    //     return Image.getInstance(is.readAllBytes());
+    // }
+
+    private Image loadLogo() {
+    try {
+        ClassPathResource resource = new ClassPathResource("static/logo.png");
+
+        if (!resource.exists()) {
+            return null;
+        }
+
+        InputStream is = resource.getInputStream();
         return Image.getInstance(is.readAllBytes());
+
+    } catch (Exception e) {
+        // Log once if needed
+        return null;
     }
+}
+
 
     private Document createDocument(String size) {
         if("LABEL_4X6".equals(size)){
@@ -485,26 +569,6 @@ private String getDestinationCode(WaybillRecord record) {
     Map<String, Object> result = getWaybillResult(record);
     return result == null ? "NA" : safe(result, "DestinationLocation");
 }
-
-// private String getRoutingText(WaybillRecord record) {
-//     String area = getDestinationArea(record);
-//     String destCode = getDestinationCode(record);
-//     String cluster = getClusterCode(record);
-//     String completeRoute="";
-
-//     // If all are NA, don’t print anything
-//     if ("NA".equals(area) && "NA".equals(destCode) && "NA".equals(cluster)) {
-//         return "";
-//     }
-
-//     completeRoute=area + " / " + destCode;
-
-//     if(!"NA".equals(cluster)){
-//         completeRoute += " / " + cluster;
-//     }
-
-//     return completeRoute;
-// }
 
 
 private String getRoutingText(WaybillRecord record) {
@@ -557,6 +621,7 @@ private PdfPCell shipmentHeaderCell(
     String routingText = getRoutingText(record);
 
     System.out.println("\n\nRouting Text: " + routingText+"\n\n");
+    
 
     PdfPCell right = new PdfPCell(new Phrase(routingText, valueFont));
     right.setBorder(Rectangle.NO_BORDER);
