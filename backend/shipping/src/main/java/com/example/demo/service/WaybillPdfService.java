@@ -71,10 +71,40 @@ public class WaybillPdfService {
             }
         } else {
 
-            for(WaybillRecord record:records) {
-                document.add(createWaybillBlock(record));
-                document.newPage();
+            PdfPTable grid = new PdfPTable(2);
+            grid.setWidthPercentage(100);
+            grid.setWidths(new float[]{1f, 1f});
+
+            int count = 0;
+            for (WaybillRecord record : records) {
+                PdfPCell cell = new PdfPCell(createWaybillBlock(record));
+                cell.setPadding(6);
+                cell.setBorderWidth(0.5f);
+                grid.addCell(cell);
+                count++;
+
+                // After every 4 labels, add the grid to the document and start a new page
+                if (count % 4 == 0) {
+                    document.add(grid);
+                    document.newPage();
+                    grid = new PdfPTable(2);
+                    grid.setWidthPercentage(100);
+                    grid.setWidths(new float[]{1f, 1f});
+                }
             }
+
+            // Add any remaining labels in the grid
+            if (count % 4 != 0) {
+                // Fill empty cells if necessary
+                int remaining = 4 - (count % 4);
+                for (int i = 0; i < remaining; i++) {
+                    PdfPCell emptyCell = new PdfPCell(new Phrase(""));
+                    emptyCell.setBorderWidth(0.5f);
+                    grid.addCell(emptyCell);
+                }
+                document.add(grid);
+            }
+           
         }
 
         document.close();
@@ -197,21 +227,21 @@ public class WaybillPdfService {
 
         block.addCell(party);
 
-        /* ---------- Services ---------- */
-PdfPTable service = new PdfPTable(1);
-service.setWidthPercentage(100);
+                /* ---------- Services ---------- */
+        PdfPTable service = new PdfPTable(1);
+        service.setWidthPercentage(100);
 
-// Shipment header with routing on the SAME LINE
-service.addCell(shipmentHeaderCell(record, sectionFont, valueFont));
+        // Shipment header with routing on the SAME LINE
+        service.addCell(shipmentHeaderCell(record, sectionFont, valueFont));
 
-// Shipment details below
-service.addCell(serviceDetailsCell(services, valueFont));
+        // Shipment details below
+        service.addCell(serviceDetailsCell(services, valueFont));
 
-block.addCell(service);
+        block.addCell(service);
 
-// COD message (separate row below shipment details)
-block.addCell(getCODAmountMessageCell(services, valueFont));
-block.addCell(getCollectionMode(services).equals("NA") ? new PdfPCell(new Phrase("", valueFont)) : new PdfPCell(new Phrase("Collection Mode : " + getCollectionMode(services), valueFont)));
+        // COD message (separate row below shipment details)
+        block.addCell(getCODAmountMessageCell(services, valueFont));
+        block.addCell(getCollectionMode(services).equals("NA") ? new PdfPCell(new Phrase("", valueFont)) : new PdfPCell(new Phrase("Collection Mode : " + getCollectionMode(services), valueFont)));
 
 
         /* ---------- Barcode ---------- */

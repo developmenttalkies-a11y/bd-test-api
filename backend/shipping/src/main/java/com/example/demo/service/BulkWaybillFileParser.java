@@ -164,7 +164,7 @@ private Map<String, Object> buildWaybillRequest(Map<String, String> row) {
     shipper.put("CustomerPincode", row.get("CustomerPincode"));
     shipper.put("CustomerTelephone", "");
     shipper.put("CustomerEmailID", "test@bd.com");
-    shipper.put("IsToPayCustomer", true);
+    shipper.put("IsToPayCustomer", false);
     shipper.put("OriginArea", row.get("OriginArea"));
     shipper.put("Sender", "BulkUpload");
     shipper.put("VendorCode", "");
@@ -210,7 +210,7 @@ private Map<String, Object> buildWaybillRequest(Map<String, String> row) {
     services.put("ParcelShopCode", "");
     services.put("PayableAt", "");
 
-    services.put("IsReversePickup", true);
+    services.put("IsReversePickup", false);
     services.put("IsPartialPickup", false);
     services.put("IsForcePickup", false);
     services.put("IsDedicatedDeliveryNetwork", false);
@@ -278,6 +278,5 @@ private double safeDouble(String value) {
     if (value == null || value.isBlank()) return 0.0;
     return Double.parseDouble(value);
 }
-
 
 }
