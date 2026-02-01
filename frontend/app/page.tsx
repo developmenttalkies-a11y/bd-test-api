@@ -264,7 +264,8 @@ const updateDimension = (
   };
 
   const fieldClass = (name: string) =>
-    `border h-8 px-2 rounded ${
+    `h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none
+                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition ${
       errors[name] ? "border-red-500 bg-red-50" : "border-gray-300"
     }`;
 
@@ -359,7 +360,10 @@ if (!profile) {
             form.creditReferenceNo || "CR-" + Date.now(),
 
           InvoiceNumber: form.invoiceNumber,
-          InvoiceDate: toBluedartDate(form.invoiceDate),
+          InvoiceDate: form.invoiceDate
+  ? toBluedartDate(form.invoiceDate)
+  : `/Date(${Date.now()})/`,
+
 
           FavouringName: form.favouringName,
           IsChequeDD: form.isChequeDD,
@@ -449,860 +453,702 @@ if (!profile) {
 
   /* ---------- UI ---------- */
 
-  // ---- Reusable Styles (put these inside your component, above the return) ----
-const SECTION = "rounded-lg border border-gray-200 bg-white shadow-sm p-5 mb-6";
-const LEGEND = "px-2 text-sm font-semibold";
-const GRID_LABEL = "block text-xs font-medium text-gray-700 mb-1";
-const INPUT_BASE =
-  "h-10 rounded-md border border-gray-300 px-3 text-sm shadow-sm outline-none transition " +
-  "focus:border-blue-500 focus:ring-2 focus:ring-blue-200";
-const SELECT_BASE = INPUT_BASE;
-const INPUT_ERR = "border-red-500 bg-red-50 focus:border-red-600 focus:ring-red-200";
+  return (
+    <form
+  className="max-w-7xl mx-auto p-6 text-sm"
+  onSubmit={(e) => {
+    e.preventDefault();
+    generateWaybill();
+  }}
+>
+  <div className="max-w-6xl mx-auto p-6">
+  <h1 className="text-3xl font-bold tracking-tight mb-6">
+    Book A Shipment
+  </h1>
 
-// Optional: If you own fieldClass(name), consider enhancing it like this:
-// const fieldClass = (name) =>
-//   `${INPUT_BASE} ${errors?.[name] ? INPUT_ERR : ""}`;
+  {/* ================= SHIPPER ================= */}
+  <fieldset className="border p-4 mb-4">
+    <legend className="font-semibold px-2">Shipper</legend>
 
-return (
-  <form
-    className="max-w-7xl mx-auto p-6 text-sm"
-    onSubmit={(e) => {
-      e.preventDefault();
-      generateWaybill();
-    }}
-  >
-    {/* PAGE HEADER */}
-    <header className="mb-6 text-center">
-      <h1 className="text-3xl font-bold tracking-tight">Book A Shipment</h1>
-      <p className="mt-1 text-gray-500 text-xs">
-        Fill shipper, consignee, service & package details to generate a waybill.
-      </p>
-    </header>
-
-    {/* ======================== SHIPPER ======================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Shipper</legend>
-
-      {/* Top row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
-        <div>
-          <label className={GRID_LABEL}>Origin Area</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="originArea"
-            value={form.originArea}
-            onChange={handleChange}
-            placeholder="e.g., DEL"
-            maxLength={3}
-            className={fieldClass("originArea")}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Customer Code</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="customerCode"
-            value={form.customerCode}
-            onChange={handleChange}
-            placeholder="6-digit"
-            maxLength={6}
-            className={fieldClass("customerCode")}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Shipper Name</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="shipperName"
-            value={form.shipperName}
-            onChange={handleChange}
-            placeholder="Company or Contact"
-            className={fieldClass("shipperName")}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Sender Name</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="sender"
-            value={form.sender}
-            onChange={handleChange}
-            placeholder="Sender"
-            className={INPUT_BASE}
-          />
-        </div>
-      </div>
-
-      {/* Pickup Address */}
-      <fieldset className="rounded-md border border-gray-200 p-4">
-        <legend className={`${LEGEND} text-gray-700`}>Pickup Address</legend>
-
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-          <div className="md:col-span-2">
-            <label className={GRID_LABEL}>Address Line 1</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="shipperAddress1"
-              value={form.shipperAddress1}
-              onChange={handleChange}
-              placeholder="House No., Street"
-              className={INPUT_BASE}
-            />
-          </div>
-          <div className="md:col-span-1">
-            <label className={GRID_LABEL}>Address Line 2</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="shipperAddress2"
-              value={form.shipperAddress2}
-              onChange={handleChange}
-              placeholder="Area"
-              className={INPUT_BASE}
-            />
-          </div>
-          <div className="md:col-span-1">
-            <label className={GRID_LABEL}>Address Line 3</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="shipperAddress3"
-              value={form.shipperAddress3}
-              onChange={handleChange}
-              placeholder="City"
-              className={INPUT_BASE}
-            />
-          </div>
-          <div>
-            <label className={GRID_LABEL}>Pincode</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="shipperPincode"
-              value={form.shipperPincode}
-              onChange={handleChange}
-              placeholder="6-digit"
-              maxLength={6}
-              className={INPUT_BASE}
-            />
-          </div>
-          <div>
-            <label className={GRID_LABEL}>Mobile</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="shipperMobile"
-              value={form.shipperMobile}
-              onChange={handleChange}
-              placeholder="+91 9XXXXXXXXX"
-              className={INPUT_BASE}
-            />
-          </div>
-        </div>
-      </fieldset>
-
-      {/* Return Address Toggle */}
-      <fieldset className="rounded-md border border-gray-200 p-4 mt-3">
-        <legend className={LEGEND}>Different Return Address?</legend>
-
-        <div className="inline-flex rounded-md border bg-gray-100 p-1 mb-3">
-          <button
-            type="button"
-            onClick={() => setIsReturnAddressDiffrent(true)}
-            className={`px-3 py-1.5 rounded text-xs font-medium ${
-              isReturnAddressDiffrent
-                ? "bg-blue-600 text-white"
-                : "text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsReturnAddressDiffrent(false)}
-            className={`px-3 py-1.5 rounded text-xs font-medium ${
-              !isReturnAddressDiffrent
-                ? "bg-blue-600 text-white"
-                : "text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            No
-          </button>
-        </div>
-
-        {isReturnAddressDiffrent && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className={GRID_LABEL}>Return Contact</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnContact"
-                placeholder="Return Contact"
-                onChange={handleChange}
-                className={INPUT_BASE}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Return Mobile</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnMobile"
-                placeholder="Return Mobile"
-                onChange={handleChange}
-                className={INPUT_BASE}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Return Address 1</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnAddress1"
-                placeholder="Address line 1"
-                onChange={handleChange}
-                className={INPUT_BASE}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Return Address 2</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnAddress2"
-                placeholder="Address line 2"
-                onChange={handleChange}
-                className={INPUT_BASE}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Return Address 3</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnAddress3"
-                placeholder="Address line 3"
-                onChange={handleChange}
-                className={INPUT_BASE}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Return Pincode</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="returnPincode"
-                placeholder="6-digit"
-                onChange={handleChange}
-                maxLength={6}
-                className={INPUT_BASE}
-              />
-            </div>
-          </div>
-        )}
-      </fieldset>
-    </fieldset>
-
-    {/* ======================== CONSIGNEE ======================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Consignee</legend>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-        <div>
-          <label className={GRID_LABEL}>Company Name *</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneeName"
-            placeholder="Company Name"
-            onChange={handleChange}
-            className={fieldClass("consigneeName")}
-          />
-        </div>
-        <div>
-          <label className={GRID_LABEL}>Receiver Name</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="receiver"
-            placeholder="Receiver Name"
-            onChange={handleChange}
-            className={INPUT_BASE}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-        <div className="md:col-span-2">
-          <label className={GRID_LABEL}>Address Line 1 *</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneeAddr1"
-            placeholder="Address 1"
-            onChange={handleChange}
-            className={fieldClass("consigneeAddr1")}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Address Line 2</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneeAddr2"
-            placeholder="Address 2"
-            onChange={handleChange}
-            className={INPUT_BASE}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Address Line 3</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneeAddr3"
-            placeholder="Address 3"
-            onChange={handleChange}
-            className={INPUT_BASE}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>Pincode *</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneePincode"
-            placeholder="6-digit"
-            onChange={handleChange}
-            maxLength={6}
-            className={fieldClass("consigneePincode")}
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className={GRID_LABEL}>Consignee Mobile *</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="consigneeMobile"
-            placeholder="+91 9XXXXXXXXX"
-            onChange={handleChange}
-            className={fieldClass("consigneeMobile")}
-          />
-        </div>
-      </div>
-    </fieldset>
-
-    {/* =================== SERVICE / PRODUCT =================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Service &amp; Product</legend>
-
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        {/* Service Type */}
-        <div className="md:col-span-5">
-          <label className={GRID_LABEL}>Service Type *</label>
-          <select
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="serviceType"
-            value={form.serviceType}
-            onChange={handleChange}
-            className={`${SELECT_BASE} w-full`}
-          >
-            <option value="">Select Service</option>
-
-            <optgroup label="Etail">
-              <option value="ETAIL_APEX_COD">Etail Apex COD</option>
-              <option value="ETAIL_APEX_PREPAID">Etail Apex Prepaid</option>
-              <option value="ETAIL_SURFACE_COD">Etail Surface COD</option>
-              <option value="ETAIL_SURFACE_PREPAID">Etail Surface Prepaid</option>
-            </optgroup>
-
-            <optgroup label="Dart Plus / Bharat Dart">
-              <option value="DARTPLUS_COD">Dart Plus COD</option>
-              <option value="DARTPLUS_PREPAID">Dart Plus Prepaid</option>
-            </optgroup>
-
-            <optgroup label="B2B">
-              <option value="APEX_B2B">Apex B2B</option>
-              <option value="SURFACE_B2B">Surface B2B</option>
-            </optgroup>
-
-            <optgroup label="Priority">
-              <option value="DOMESTIC_PRIORITY">Domestic Priority</option>
-            </optgroup>
-
-            <optgroup label="DOD / FOD">
-              <option value="APEX_DOD">Apex DOD</option>
-              <option value="APEX_FOD">Apex FOD</option>
-              <option value="SURFACE_DOD">Surface DOD</option>
-              <option value="SURFACE_FOD">Surface FOD</option>
-            </optgroup>
-
-            <optgroup label="DODFOD">
-              <option value="APEX_DODFOD">Apex DODFOD</option>
-              <option value="SURFACE_DODFOD">Surface DODFOD</option>
-            </optgroup>
-          </select>
-          {errors.serviceType && (
-            <p className="text-xs text-red-600 mt-1">Service Type is required</p>
-          )}
-        </div>
-
-        {/* Shipment Type */}
-        <div className="md:col-span-3">
-          <label className={GRID_LABEL}>Shipment Type *</label>
-          <select
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="productType"
-            value={form.productType}
-            onChange={handleChange}
-            className={`${SELECT_BASE} w-full`}
-          >
-            <option value="">Select</option>
-            <option value="0">DOX</option>
-            <option value="1">NDOX</option>
-          </select>
-        </div>
-
-        {/* Label Size */}
-        <div className="md:col-span-4">
-          <label className={GRID_LABEL}>Label Size</label>
-          <select
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="labelSize"
-            value={form.labelSize}
-            onChange={handleChange}
-            className={`${SELECT_BASE} w-full`}
-          >
-            <option value="A4">A4</option>
-            <option value="LABEL_4X6">4 × 6</option>
-          </select>
-        </div>
-      </div>
-    </fieldset>
-
-    {/* =================== SHIPMENT DETAILS =================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Shipment Details</legend>
-
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
-        <div>
-          <label className={GRID_LABEL}>Reference No</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="creditReferenceNo"
-            placeholder="Ref No"
-            onChange={handleChange}
-            className={INPUT_BASE}
-          />
-        </div>
-
-        <div>
-          <label className={GRID_LABEL}>No. of Boxes</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="pieceCount"
-            placeholder="No of Boxes"
-            onChange={handleChange}
-            className={INPUT_BASE}
-          />
-        </div>
-
-        {isDuts && (
-          <>
-            <div>
-              <label className={GRID_LABEL}>Declared Value</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="declaredValue"
-                placeholder="Declared Value"
-                onChange={handleChange}
-                className={fieldClass("declaredValue")}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Invoice No</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="invoiceNumber"
-                placeholder="Invoice No"
-                onChange={handleChange}
-                className={fieldClass("invoiceNumber")}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Invoice Date</label>
-              <input
-                type="date"
-                name="invoiceDate"
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                onChange={handleChange}
-                className={`${INPUT_BASE} w-full`}
-              />
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Pickup Date</label>
-              <input
-                type="date"
-                name="pickupDate"
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                onChange={handleChange}
-                className={`${INPUT_BASE} w-full`}
-              />
-            </div>
-          </>
-        )}
-
-        <div>
-          <label className={GRID_LABEL}>Weight (kg) *</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="weight"
-            placeholder="Weight"
-            onChange={handleChange}
-            className={fieldClass("weight")}
-          />
-        </div>
-      </div>
-
-      {needsCollectable && (
-        <div className="mt-3">
-          <label className={GRID_LABEL}>COD Amount</label>
-          <input
-            ref={registerRef}
-            onKeyDown={handleKeyDown}
-            name="codAmount"
-            placeholder="COD Amount"
-            onChange={handleChange}
-            className={fieldClass("codAmount")}
-          />
-        </div>
-      )}
-
-      {needsChequeDetails && (
-        <fieldset className="border mt-4 p-4 rounded-md">
-          <legend className={LEGEND}>DOD / FOD Details</legend>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className={GRID_LABEL}>Favouring Name</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="favouringName"
-                placeholder="Favouring Name"
-                onChange={handleChange}
-                className={fieldClass("favouringName")}
-              />
-            </div>
-
-            <div className="flex items-center gap-6">
-              <label className="text-xs">
-                <input
-                  type="radio"
-                  name="isChequeDD"
-                  value="Q"
-                  checked={form.isChequeDD === "Q"}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                Cheque
-              </label>
-              <label className="text-xs">
-                <input
-                  type="radio"
-                  name="isChequeDD"
-                  value="D"
-                  checked={form.isChequeDD === "D"}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                DD
-              </label>
-            </div>
-
-            <div>
-              <label className={GRID_LABEL}>Payable At</label>
-              <input
-                ref={registerRef}
-                onKeyDown={handleKeyDown}
-                name="payableAt"
-                placeholder="Payable At"
-                onChange={handleChange}
-                className={fieldClass("payableAt")}
-              />
-            </div>
-          </div>
-        </fieldset>
-      )}
-    </fieldset>
-
-    {/* =================== ITEM DETAILS =================== */}
-    {isDuts && (
-      <fieldset className={SECTION}>
-        <legend className={LEGEND}>Item Details</legend>
-
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
-          <div className="md:col-span-2">
-            <label className={GRID_LABEL}>Item Name *</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="itemName"
-              placeholder="Item Name"
-              value={form.itemName}
-              onChange={handleChange}
-              className={fieldClass("itemName")}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Qty</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="itemQty"
-              type="number"
-              min={1}
-              placeholder="Qty"
-              value={form.itemQty}
-              onChange={handleChange}
-              className={INPUT_BASE}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Item Value</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="itemValue"
-              type="number"
-              min={1}
-              placeholder="Item Value"
-              value={form.itemValue}
-              onChange={handleChange}
-              className={INPUT_BASE}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Commodity Details 1</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="comodityDetails1"
-              placeholder="Commodity Details 1"
-              value={form.comodityDetails1}
-              onChange={handleChange}
-              className={INPUT_BASE}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Commodity Details 2</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="comodityDetails2"
-              placeholder="Commodity Details 2"
-              value={form.comodityDetails2}
-              onChange={handleChange}
-              className={INPUT_BASE}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Commodity Details 3</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              name="comodityDetails3"
-              placeholder="Commodity Details 3"
-              value={form.comodityDetails3}
-              onChange={handleChange}
-              className={INPUT_BASE}
-            />
-          </div>
-        </div>
-
-        {errors.itemName && (
-          <p className="text-xs text-red-600 mt-1">
-            Item Name is required for NDOX shipments
-          </p>
-        )}
-      </fieldset>
-    )}
-
-    {/* =================== PACKAGE DIMENSIONS =================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Package Dimensions</legend>
-
-      {dimensions.map((dim, index) => (
-        <div
-          key={index}
-          className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-2 items-center"
-        >
-          <div>
-            <label className={GRID_LABEL}>Length (cm)</label>
-            <input
-              ref={registerRef}
-              name={`length_${index}`}
-              onKeyDown={handleKeyDown}
-              type="number"
-              placeholder="Length"
-              value={dim.length}
-              onChange={(e) => updateDimension(index, "length", e.target.value)}
-              className={`${INPUT_BASE} ${
-                errors[`length_${index}`] ? INPUT_ERR : ""
-              }`}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Breadth (cm)</label>
-            <input
-              ref={registerRef}
-              name={`breadth_${index}`}
-              onKeyDown={handleKeyDown}
-              type="number"
-              placeholder="Breadth"
-              value={dim.breadth}
-              onChange={(e) => updateDimension(index, "breadth", e.target.value)}
-              className={`${INPUT_BASE} ${
-                errors[`breadth_${index}`] ? INPUT_ERR : ""
-              }`}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Height (cm)</label>
-            <input
-              ref={registerRef}
-              name={`height_${index}`}
-              onKeyDown={handleKeyDown}
-              type="number"
-              placeholder="Height"
-              value={dim.height}
-              onChange={(e) => updateDimension(index, "height", e.target.value)}
-              className={`${INPUT_BASE} ${
-                errors[`height_${index}`] ? INPUT_ERR : ""
-              }`}
-            />
-          </div>
-
-          <div>
-            <label className={GRID_LABEL}>Boxes</label>
-            <input
-              ref={registerRef}
-              onKeyDown={handleKeyDown}
-              type="number"
-              min={1}
-              placeholder="Count"
-              value={dim.count}
-              onChange={(e) => updateDimension(index, "count", e.target.value)}
-              className={`${INPUT_BASE} ${
-                errors[`dimension_count_${index}`] ? INPUT_ERR : ""
-              }`}
-            />
-          </div>
-
-          {dimensions.length > 1 ? (
-            <button
-              type="button"
-              onClick={() => removeDimension(index)}
-              className="text-red-600 hover:text-red-700 text-xs font-medium self-end md:self-center"
-              title="Remove row"
-            >
-              ✕ Remove
-            </button>
-          ) : (
-            <div />
-          )}
-        </div>
-      ))}
-
-      <button
+    <div className="grid grid-cols-4 gap-3 mb-1">
+      <input
         ref={registerRef}
         onKeyDown={handleKeyDown}
-        type="button"
-        onClick={addDimension}
-        className="mt-2 text-blue-600 hover:text-blue-800 underline text-sm"
-      >
-        + Add Another Box
-      </button>
+        name="originArea"
+        value={form.originArea}
+        onChange={handleChange}
+        placeholder="OriginArea"
+        className={fieldClass("originArea")}
+        maxLength={3}
+      />
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="customerCode"
+        value={form.customerCode}
+        onChange={handleChange}
+        placeholder="CustCode"
+        className={fieldClass("customerCode")}
+        maxLength={6}
+      />
+
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="shipperName"
+        value={form.shipperName}
+        onChange={handleChange}
+        placeholder="Shipper Name"
+        className={fieldClass("shipperName")}
+      />
+
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="sender"
+        value={form.sender}
+        onChange={handleChange}
+        placeholder="Sender Name"
+        className={fieldClass("sender")}
+      />
+    </div>
+
+    <fieldset className="border p-3">
+      <legend className="px-2">Pickup Address</legend>
+
+      <div className="grid grid-cols-5 gap-3 mb-3">
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="shipperAddress1"
+          value={form.shipperAddress1}
+          onChange={handleChange}
+          placeholder="Address 1"
+          className={fieldClass("shipperAddress1")}
+        />
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="shipperAddress2"
+          value={form.shipperAddress2}
+          onChange={handleChange}
+          placeholder="Address 2"
+          className={fieldClass("shipperAddress2")}
+        />
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="shipperAddress3"
+          value={form.shipperAddress3}
+          onChange={handleChange}
+          placeholder="Address 3"
+          className={fieldClass("shipperAddress3")}
+        />
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="shipperPincode"
+          value={form.shipperPincode}
+          onChange={handleChange}
+          placeholder="Pincode"
+          className={fieldClass("shipperPincode")}
+          maxLength={6}
+        />
+
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="shipperMobile"
+          value={form.shipperMobile}
+          onChange={handleChange}
+          placeholder="Mobile"
+          className={fieldClass("shipperMobile")}
+        />
+      </div>
     </fieldset>
 
-    {/* =================== RESPONSE =================== */}
-    <fieldset className={SECTION}>
-      <legend className={LEGEND}>Response</legend>
+    <fieldset className="border p-3 mt-3">
+      <legend>Different Return Address?</legend>
+      <label className="mr-4">
+        <input
+          ref={registerRef}
+          onKeyDown={handleKeyDown}
+          type="radio"
+          checked={isReturnAddressDiffrent}
+          onChange={() => setIsReturnAddressDiffrent(true)}
+        />{" "}
+        Yes
+      </label>
+      <label>
+        <input
+          ref={registerRef}
+          onKeyDown={handleKeyDown}
+          type="radio"
+          checked={!isReturnAddressDiffrent}
+          onChange={() => setIsReturnAddressDiffrent(false)}
+        />{" "}
+        No
+      </label>
 
-      {awb && (
-        <div className="space-y-2">
-          <p className="text-green-700 font-semibold">
-            ✅ Waybill Generated Successfully: {awb}
-          </p>
-
-          <a
-            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bluedart/waybill/${awb}/pdf?size=${form.labelSize}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 underline text-sm font-medium"
-          >
-            ⬇ Download Waybill PDF
-          </a>
+      {isReturnAddressDiffrent && (
+        <div className="grid grid-cols-3 gap-3 mt-3">
+          <input ref={registerRef} 
+          onKeyDown={handleKeyDown} 
+          name="returnContact" 
+          placeholder="Return Contact" 
+          onChange={handleChange} 
+          className={fieldClass("returnContact")}
+          /> 
+          
+          <input ref={registerRef} 
+          onKeyDown={handleKeyDown} 
+          name="returnMobile" 
+          placeholder="Return Mobile" 
+          onChange={handleChange} 
+          className={fieldClass("returnMobile")} 
+          /> 
+          
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="returnAddress1"
+            placeholder="Return Address 1"
+            onChange={handleChange}
+            className={fieldClass("returnAddress1")}
+          />
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="returnAddress2"
+            placeholder="Return Address 2"
+            onChange={handleChange}
+            className={fieldClass("returnAddress2")}
+          />
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="returnAddress3"
+            placeholder="Return Address 3"
+            onChange={handleChange}
+            className={fieldClass("returnAddress3")}
+          />
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="returnPincode"
+            placeholder="Return Pincode"
+            onChange={handleChange}
+            className={fieldClass("returnPincode")}
+            maxLength={6}
+          />
         </div>
       )}
-
-      {error && (
-        <p className="text-red-600 font-semibold mt-2">❌ {error}</p>
-      )}
     </fieldset>
+  </fieldset>
 
-    {/* STICKY ACTION BAR (nice UX on long forms) */}
-    <div className="sticky bottom-4 mt-6 flex justify-end">
-      <button
-        ref={registerRef}
-        type="submit"
-        disabled={loading || !profile}
-        className="rounded-md bg-blue-600 px-6 py-2 text-white text-sm font-semibold shadow
-                   hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200
-                   disabled:opacity-50"
-      >
-        {loading ? "Generating..." : "Submit"}
-      </button>
+  {/* ================= CONSIGNEE ================= */}
+  <fieldset className="border p-4 mb-4">
+    <legend className="font-semibold px-2">Consignee</legend>
+
+    <div className="grid grid-cols-2 gap-3 mb-3">
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="consigneeName"
+        placeholder="Company Name"
+        onChange={handleChange}
+        className={fieldClass("consigneeName")}
+      />
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="receiver"
+        placeholder="Receiver Name"
+        onChange={handleChange}
+        className={fieldClass("receiver")}
+      />
     </div>
-  </form>
-);
 
+    <div className="grid grid-cols-5 gap-3">
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="consigneeAddr1"
+        placeholder="Address 1"
+        onChange={handleChange}
+        className={fieldClass("consigneeAddr1")}
+      />
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="consigneeAddr2"
+        placeholder="Address 2"
+        onChange={handleChange}
+        className={fieldClass("consigneeAddr2")}
+      />
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="consigneeAddr3"
+        placeholder="Address 3"
+        onChange={handleChange}
+        className={fieldClass("consigneeAddr3")}
+      />
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="consigneePincode"
+        placeholder="Pincode"
+        onChange={handleChange}
+        className={fieldClass("consigneePincode")}
+        maxLength={6}
+      />
+
+      <input
+  ref={registerRef}
+  onKeyDown={handleKeyDown}
+  name="consigneeMobile"
+  placeholder="Consignee Mobile"
+  onChange={handleChange}
+  className={fieldClass("consigneeMobile")}
+/>
+
+
+    </div>
+  </fieldset>
+
+ {/* ================= SERVICE / PRODUCT ================= */}
+<fieldset className="border p-4 mb-4">
+  <legend className="font-semibold px-2">Service & Product</legend>
+
+  <div className="grid grid-cols-12 gap-4">
+
+    {/* Service Type */}
+    <div className="col-span-5 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Service Type *
+      </label>
+      <select
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="serviceType"
+        value={form.serviceType}
+        onChange={handleChange}
+        className={`${fieldClass("serviceType")} w-full`}
+      >
+        <option value="">Select Service</option>
+
+        <optgroup label="Etail">
+          <option value="ETAIL_APEX_COD">Etail Apex COD</option>
+          <option value="ETAIL_APEX_PREPAID">Etail Apex Prepaid</option>
+          <option value="ETAIL_SURFACE_COD">Etail Surface COD</option>
+          <option value="ETAIL_SURFACE_PREPAID">Etail Surface Prepaid</option>
+        </optgroup>
+
+        <optgroup label="Dart Plus / Bharat Dart">
+          <option value="DARTPLUS_COD">Dart Plus COD</option>
+          <option value="DARTPLUS_PREPAID">Dart Plus Prepaid</option>
+        </optgroup>
+
+        <optgroup label="B2B">
+          <option value="APEX_B2B">Apex B2B</option>
+          <option value="SURFACE_B2B">Surface B2B</option>
+        </optgroup>
+
+        <optgroup label="Priority">
+          <option value="DOMESTIC_PRIORITY">Domestic Priority</option>
+        </optgroup>
+
+        <optgroup label="DOD / FOD">
+          <option value="APEX_DOD">Apex DOD</option>
+          <option value="APEX_FOD">Apex FOD</option>
+          <option value="SURFACE_DOD">Surface DOD</option>
+          <option value="SURFACE_FOD">Surface FOD</option>
+        </optgroup>
+
+        <optgroup label="DODFOD">
+          <option value="APEX_DODFOD">Apex DODFOD</option>
+          <option value="SURFACE_DODFOD">Surface DODFOD</option>
+        </optgroup>
+      </select>
+
+      {errors.serviceType && (
+        <p className="text-xs text-red-600 mt-1">
+          Service Type is required
+        </p>
+      )}
+    </div>
+
+    {/* Shipment Type */}
+    <div className="col-span-3 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Shipment Type *
+      </label>
+      <select
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="productType"
+        value={form.productType}
+        onChange={handleChange}
+        className={`${fieldClass("productType")} w-full`}
+      >
+        <option value="">Select</option>
+        <option value="0">DOX</option>
+        <option value="1">NDOX</option>
+      </select>
+    </div>
+
+    {/* Label Size */}
+    <div className="col-span-4 relative">
+      <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+        Label Size
+      </label>
+      <select
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="labelSize"
+        value={form.labelSize}
+        onChange={handleChange}
+        className={fieldClass("labelSize")}
+      >
+        <option value="A4">A4</option>
+        <option value="LABEL_4X6">4 × 6</option>
+      </select>
+    </div>
+
+  </div>
+</fieldset>
+
+
+  {/* ================= SHIPMENT DETAILS ================= */}
+  <fieldset className="border p-4 mb-4">
+    <legend className="font-semibold px-2">Shipment Details</legend>
+
+    <div className="grid grid-cols-7 gap-2 items-center">
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="creditReferenceNo"
+        placeholder="Ref No"
+        onChange={handleChange}
+        className={fieldClass("creditReferenceNo")}
+        maxLength={20}
+      />
+
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="pieceCount"
+        placeholder="No of Boxes"
+        onChange={handleChange}
+        className={fieldClass("pieceCount")}
+      />
+
+      {isDuts && (
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="declaredValue"
+          placeholder="Declared Value"
+          onChange={handleChange}
+          className={fieldClass("declaredValue")}
+        />
+      )}
+
+      {isDuts && (
+        <input ref={registerRef} onKeyDown={handleKeyDown}
+          name="invoiceNumber"
+          placeholder="Invoice No"
+          onChange={handleChange}
+          className={fieldClass("invoiceNumber")}
+        />
+      )}
+
+          {/* Invoice Date */}
+    {isDuts && (
+      <>
+<div className="relative">
+  <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+    Invoice Date
+  </label>
+  <input
+    type="date"
+    name="invoiceDate"
+    ref={registerRef}
+    onKeyDown={handleKeyDown}
+    onChange={handleChange}
+    className={fieldClass("invoiceDate")}
+  />
+</div>
+</>
+    )}
+
+<div className="relative">
+  <label className="absolute -top-2 left-2 bg-white px-1 text-xs font-semibold">
+    Pickup Date
+  </label>
+  <input
+    type="date"
+    name="pickupDate"
+    ref={registerRef}
+    onKeyDown={handleKeyDown}
+    onChange={handleChange}
+    className={fieldClass("pickupDate")}
+  />
+</div>
+
+
+      <input ref={registerRef} onKeyDown={handleKeyDown}
+        name="weight"
+        placeholder="Weight"
+        onChange={handleChange}
+        className={fieldClass("weight")}
+      />
+    
+    </div>
+
+    {needsCollectable && (
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="codAmount"
+        placeholder="COD Amount"
+        onChange={handleChange}
+        className={fieldClass("codAmount")}
+      />
+    )}
+
+    {needsChequeDetails && (
+      <fieldset className="border mt-3 p-3 rounded">
+        <legend className="font-semibold px-2">DOD / FOD Details</legend>
+
+        <div className="grid grid-cols-3 gap-3">
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="favouringName"
+            placeholder="Favouring Name"
+            onChange={handleChange}
+            className={fieldClass("favouringName")}
+          />
+
+          <div className="flex gap-4 items-center">
+            <label>
+              <input
+                type="radio"
+                name="isChequeDD"
+                value="Q"
+                checked={form.isChequeDD === "Q"}
+                onChange={handleChange}
+              />{" "}
+              Cheque
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="isChequeDD"
+                value="D"
+                checked={form.isChequeDD === "D"}
+                onChange={handleChange}
+              />{" "}
+              DD
+            </label>
+          </div>
+
+          <input ref={registerRef} onKeyDown={handleKeyDown}
+            name="payableAt"
+            placeholder="Payable At"
+            onChange={handleChange}
+            className={fieldClass("payableAt")}
+          />
+        </div>
+      </fieldset>
+    )}
+  </fieldset>
+
+{/* ================= ITEM DETAILS ================= */}
+{isDuts && (
+  <fieldset className="border p-4 mb-4">
+    <legend className="font-semibold px-2">Item Details</legend>
+
+    <div className="grid grid-cols-6 gap-3 items-center">
+
+      {/* Item Name */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="itemName"
+        placeholder="Item Name"
+        value={form.itemName}
+        onChange={handleChange}
+        className={fieldClass("itemName")}
+      />
+
+      {/* Qty */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="itemQty"
+        type="number"
+        min={1}
+        placeholder="Qty"
+        value={form.itemQty}
+        onChange={handleChange}
+        className={fieldClass("itemQty")}
+      />
+
+      {/* Item Value */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="itemValue"
+        type="number"
+        min={1}
+        placeholder="Item Value"
+        value={form.itemValue}
+        onChange={handleChange}
+        className={fieldClass("itemValue")}
+      />
+
+      {/* Commodity 1 */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="comodityDetails1"
+        placeholder="Commodity Details 1"
+        value={form.comodityDetails1}
+        onChange={handleChange}
+        className={fieldClass("comodityDetails1")}
+      />
+
+      {/* Commodity 2 */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="comodityDetails2"
+        placeholder="Commodity Details 2"
+        value={form.comodityDetails2}
+        onChange={handleChange}
+        className={fieldClass("comodityDetails2")}
+      />
+
+      {/* Commodity 3 */}
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        name="comodityDetails3"
+        placeholder="Commodity Details 3"
+        value={form.comodityDetails3}
+        onChange={handleChange}
+        className={fieldClass("comodityDetails3")}
+      />
+    </div>
+
+    {errors.itemName && (
+      <p className="text-xs text-red-600 mt-1">
+        Item Name is required for NDOX shipments
+      </p>
+    )}
+  </fieldset>
+)}
+
+
+
+  {/* ================= PACKAGE DIMENSIONS ================= */}
+<fieldset className="border p-4 mb-4">
+  <legend className="font-semibold px-2">Package Dimensions</legend>
+
+  {dimensions.map((dim, index) => (
+    <div
+      key={index}
+      className="grid grid-cols-5 gap-3 mb-2 items-center"
+    >
+      <input
+        ref={registerRef}
+        name={`length_${index}`}
+        onKeyDown={handleKeyDown}
+        type="number"
+        placeholder="Length (cm)"
+        value={dim.length}
+        onChange={(e) =>
+          updateDimension(index, "length", e.target.value)
+        }
+        className={`border h-8 px-2 rounded ${
+          errors[`length_${index}`] ? "border-red-500 bg-red-50" : ""
+        }`}
+      />
+
+      <input
+        ref={registerRef}
+        name={`breadth_${index}`}
+        onKeyDown={handleKeyDown}
+        type="number"
+        placeholder="Breadth (cm)"
+        value={dim.breadth}
+        onChange={(e) =>
+          updateDimension(index, "breadth", e.target.value)
+        }
+        className={`border h-8 px-2 rounded ${
+          errors[`breadth_${index}`] ? "border-red-500 bg-red-50" : ""
+        }`}
+      />
+
+      <input
+        ref={registerRef}
+        name={`height_${index}`}
+        onKeyDown={handleKeyDown}
+        type="number"
+        placeholder="Height (cm)"
+        value={dim.height}
+        onChange={(e) =>
+          updateDimension(index, "height", e.target.value)
+        }
+        className={`border h-8 px-2 rounded ${
+          errors[`height_${index}`] ? "border-red-500 bg-red-50" : ""
+        }`}
+      />
+
+      <input
+        ref={registerRef}
+        onKeyDown={handleKeyDown}
+        type="number"
+        min={1}
+        placeholder="Boxes"
+        value={dim.count}
+        onChange={(e) =>
+          updateDimension(index, "count", e.target.value)
+        }
+        className={`border h-8 px-2 rounded ${
+          errors[`dimension_count_${index}`]
+            ? "border-red-500 bg-red-50"
+            : ""
+        }`}
+      />
+
+      {dimensions.length > 1 && (
+        <button
+          type="button"
+          onClick={() => removeDimension(index)}
+          className="text-red-600 text-sm"
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  ))}
+
+  <button
+    ref={registerRef}
+    onKeyDown={handleKeyDown}
+    type="button"
+    onClick={addDimension}
+    className="mt-2 text-blue-600 underline text-sm"
+  >
+    + Add Another Box
+  </button>
+</fieldset>
+
+
+  {/* ================= RESPONSE ================= */}
+<fieldset className="border p-4 mt-6">
+  <legend className="font-semibold px-2">Response</legend>
+
+  {awb && (
+    <div className="space-y-2">
+      <p className="text-green-700 font-semibold">
+        ✅ Waybill Generated Successfully: {awb}
+      </p>
+
+      <a
+        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bluedart/waybill/${awb}/pdf?size=${form.labelSize}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 underline text-sm"
+      >
+        ⬇ Download Waybill PDF
+      </a>
+    </div>
+  )}
+
+  {error && (
+    <p className="text-red-600 font-semibold mt-2">
+      ❌ {error}
+    </p>
+  )}
+</fieldset>
+
+
+  <button
+    ref={registerRef}
+    type="submit"
+    disabled={loading || !profile}
+    className="mt-6 bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50"
+  >
+    {loading ? "Generating..." : "Submit"}
+  </button>
+</div>
+</form>
+  );
 }
