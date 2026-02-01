@@ -12,6 +12,10 @@ import com.example.demo.dto.CancelHistoryRecord;
 import com.example.demo.dto.CancelWaybillRequest;
 import com.example.demo.dto.CancelWaybillResponse;
 import java.util.Collections;
+import org.springframework.web.client.HttpClientErrorException;
+import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -104,13 +108,49 @@ public class WaybillCancellationService {
 //     }  
 // }
 
-public CancelWaybillResponse cancelWaybillInternal(String awbNo) {
+// public CancelWaybillResponse cancelWaybillInternal(String awbNo) {
 
-    CancelWaybillRequest request=new CancelWaybillRequest();
-    CancelWaybillRequest.Request req=new CancelWaybillRequest.Request();
-    req.setAwbNo(awbNo);
+//     CancelWaybillRequest request=new CancelWaybillRequest();
+//     CancelWaybillRequest.Request req=new CancelWaybillRequest.Request();
+//     req.setAwbNo(awbNo);
 
-    CancelWaybillRequest.Profile profile=new CancelWaybillRequest.Profile();
+//     CancelWaybillRequest.Profile profile=new CancelWaybillRequest.Profile();
+//     profile.setApiType("S");
+//     profile.setLicenceKey(licenceKey);
+//     profile.setLoginId(loginId);
+
+//     request.setRequest(req);
+//     request.setProfile(profile);
+
+//     String jwtToken = getJwtToken();
+//     System.out.println("JWT = " + jwtToken);
+
+//     System.out.println("Request : "+request);
+
+//     HttpHeaders headers = new HttpHeaders();
+//     headers.set("JWTToken", jwtToken);
+
+//     headers.setContentType(MediaType.APPLICATION_JSON);
+//     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//     HttpEntity<CancelWaybillRequest> entity =
+//             new HttpEntity<>(request, headers);
+           
+//     ResponseEntity<CancelWaybillResponse> response = restTemplate.exchange(
+//             cancelUrl, HttpMethod.POST, entity, CancelWaybillResponse.class); 
+
+
+//           return response.getBody();
+// }
+
+
+public CancelWaybillResponse cancelWaybillInternal(String awb) {
+
+    CancelWaybillRequest request = new CancelWaybillRequest();
+
+    CancelWaybillRequest.Request req = new CancelWaybillRequest.Request();
+    req.setAwbNo(awb);
+
+    CancelWaybillRequest.Profile profile = new CancelWaybillRequest.Profile();
     profile.setApiType("S");
     profile.setLicenceKey(licenceKey);
     profile.setLoginId(loginId);
@@ -118,24 +158,67 @@ public CancelWaybillResponse cancelWaybillInternal(String awbNo) {
     request.setRequest(req);
     request.setProfile(profile);
 
-    String jwtToken = getJwtToken();
-    System.out.println("JWT = " + jwtToken);
-
-    System.out.println("Request : "+request);
-
     HttpHeaders headers = new HttpHeaders();
-    headers.set("JWTToken", jwtToken);
-
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("JWTToken", getJwtToken());
+
     HttpEntity<CancelWaybillRequest> entity =
             new HttpEntity<>(request, headers);
-           
-    ResponseEntity<CancelWaybillResponse> response = restTemplate.exchange(
-            cancelUrl, HttpMethod.POST, entity, CancelWaybillResponse.class); 
 
+    try {
+        // ✅ Success case (HTTP 200)
+        ResponseEntity<CancelWaybillResponse> response =
+                restTemplate.exchange(
+                        cancelUrl,
+                        HttpMethod.POST,
+                        entity,
+                        CancelWaybillResponse.class
+                );
 
-          return response.getBody();
+        return response.getBody();
+
+    } catch (HttpClientErrorException ex) {
+        // ✅ Error case (HTTP 400)
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(ex.getResponseBodyAsString());
+
+            JsonNode errorNode = root
+                    .path("error-response")
+                    .get(0);
+
+            String message = errorNode
+                    .path("Status")
+                    .get(0)
+                    .path("StatusInformation")
+                    .asText("Cancellation failed");
+
+            // 🔹 Build normalized response
+            CancelWaybillResponse response = new CancelWaybillResponse();
+            CancelWaybillResponse.CancelWaybillResult result =
+                    new CancelWaybillResponse.CancelWaybillResult();
+
+            result.setAwbNo(awb);
+            result.setIsError(true);
+
+            CancelWaybillResponse.Status status =
+                    new CancelWaybillResponse.Status();
+            status.setStatusCode("CancelFailure");
+            status.setStatusInformation(message);
+
+            result.setStatus(List.of(status));
+            response.setCancelWaybillResult(result);
+
+            return response;
+
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Failed to parse Blue Dart error response", e
+            );
+        }
+    }
 }
+
 
 }

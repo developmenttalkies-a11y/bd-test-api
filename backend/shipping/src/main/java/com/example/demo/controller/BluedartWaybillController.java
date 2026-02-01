@@ -171,63 +171,97 @@ private ResponseEntity<byte[]> fileResponse(String name) throws Exception {
     .body(data);
 }
 
+// @PostMapping("/cancel")
+// public ResponseEntity<?> cancelWaybill(@RequestParam String awbNo) {
+//     System.out.println("✅ Backend received cancel waybill request for AWB No: " + awbNo);
+
+//     try {
+//     CancelWaybillResponse response = cancellationService.cancelWaybillInternal(awbNo);
+//     String message = "Cancellation processed";
+
+//     boolean isError=response.getCancelWaybillResult().getIsError();
+
+//     // String message=response.getCancelWaybillResult()
+//     //                 .getStatus()
+//     //                 .get(0)
+//     //                 .getStatusInformation();
+
+// if (response.getCancelWaybillResult() != null
+//     && response.getCancelWaybillResult().getStatus() != null
+//     && !response.getCancelWaybillResult().getStatus().isEmpty()) {
+
+//     message = response.getCancelWaybillResult()
+//                       .getStatus().get(0)
+//                       .getStatusInformation();
+// }
+
+//     CancelStatus status=isError ? CancelStatus.FAILED : CancelStatus.SUCCESS;
+//     historyService.save(
+//         new CancelHistoryRecord(
+//             awbNo,  
+//             status,
+//             message,
+//             LocalDateTime.now(),
+//             "SINGLE",
+//             "SYSTEM"
+//             )       
+//         );
+                    
+//     return ResponseEntity.ok(response);
+//     } catch(Exception ex) {
+
+//         // 🔴 Save failure history even if API fails
+//         historyService.save(
+//             new CancelHistoryRecord(
+//                 awbNo,
+//                 CancelStatus.FAILED,
+//                 ex.getMessage(),
+//                 LocalDateTime.now(),
+//                 "SINGLE",
+//                 "SYSTEM"
+//             )
+//         );
+
+//         return ResponseEntity
+//                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                 .body("Waybill cancellation failed");
+
+//     }
+// }
+
+
 @PostMapping("/cancel")
 public ResponseEntity<?> cancelWaybill(@RequestParam String awbNo) {
     System.out.println("✅ Backend received cancel waybill request for AWB No: " + awbNo);
 
-    try {
     CancelWaybillResponse response = cancellationService.cancelWaybillInternal(awbNo);
-    String message = "Cancellation processed";
+
+    String message="Cancellation processed";
+    if (response.getCancelWaybillResult() !=null && response.getCancelWaybillResult().getStatus()!=null && !response.getCancelWaybillResult().getStatus().isEmpty() ) {
+        
+        message=response.getCancelWaybillResult().getStatus().get(0).getStatusInformation();
+
+    }
 
     boolean isError=response.getCancelWaybillResult().getIsError();
 
-    // String message=response.getCancelWaybillResult()
-    //                 .getStatus()
-    //                 .get(0)
-    //                 .getStatusInformation();
-
-if (response.getCancelWaybillResult() != null
-    && response.getCancelWaybillResult().getStatus() != null
-    && !response.getCancelWaybillResult().getStatus().isEmpty()) {
-
-    message = response.getCancelWaybillResult()
-                      .getStatus().get(0)
-                      .getStatusInformation();
-}
-
+    
     CancelStatus status=isError ? CancelStatus.FAILED : CancelStatus.SUCCESS;
-    historyService.save(
-        new CancelHistoryRecord(
-            awbNo,  
-            status,
-            message,
-            LocalDateTime.now(),
-            "SINGLE",
-            "SYSTEM"
-            )       
-        );
-                    
+
+    System.out.println("Saving records to the file...");
+
+    historyService.save(new CancelHistoryRecord(
+        awbNo,
+        status,
+        message,
+        LocalDateTime.now(),
+        "SINGLE",
+        "SYSTEM"
+    ));
+
     return ResponseEntity.ok(response);
-    } catch(Exception ex) {
-
-        // 🔴 Save failure history even if API fails
-        historyService.save(
-            new CancelHistoryRecord(
-                awbNo,
-                CancelStatus.FAILED,
-                ex.getMessage(),
-                LocalDateTime.now(),
-                "SINGLE",
-                "SYSTEM"
-            )
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Waybill cancellation failed");
-
-    }
 }
+
 
 @PostMapping(value="/cancel/bulk", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<BulkCancelResponse> bulkCancelExcel(@RequestParam("file") MultipartFile file) {

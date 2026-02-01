@@ -145,4 +145,39 @@
   "cancelledAt" : "2026-01-31T12:08:36.986063357",
   "source" : "SINGLE",
   "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472090973",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"20472090973\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-02-01T05:19:34.536512719",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472090973",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"20472090973\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-02-01T05:34:28.524154227",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472093283",
+  "status" : "FAILED",
+  "message" : "400 Bad Request on POST request for \"https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/CancelWaybill\": \"<EOL>            {\"status\":400,<EOL>            \"title\":\"Bad Request\",<EOL>            \"error-response\":[{\"AWBNo\":\"20472093283\",\"IsError\":true,\"Status\":[{\"StatusCode\":\"CancelFailure\",\"StatusInformation\":\"Waybill Number has been already cancelled.\"}]}]}\"",
+  "cancelledAt" : "2026-02-01T05:34:41.921506642",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472090973",
+  "status" : "FAILED",
+  "message" : "Waybill Number has been already cancelled.",
+  "cancelledAt" : "2026-02-01T06:03:39.528516238",
+  "source" : "SINGLE",
+  "requestedBy" : "SYSTEM"
+}, {
+  "awbNo" : "20472093283",
+  "status" : "FAILED",
+  "message" : "Waybill Number has been already cancelled.",
+  "cancelledAt" : "2026-02-01T06:04:04.821469964",
+  "source" : "BULK",
+  "requestedBy" : "SYSTEM"
 } ]
