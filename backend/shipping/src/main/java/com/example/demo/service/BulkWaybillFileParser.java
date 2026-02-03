@@ -26,7 +26,7 @@ public class BulkWaybillFileParser {
 
         if (filename.endsWith(".csv")) {
             System.out.println("Parsing CSV file");
-            return parseCsv(file);
+            //return parseCsv(file);
         } else if (filename.endsWith(".xlsx")) {
             return parseXlsx(file); 
         }
@@ -36,40 +36,40 @@ public class BulkWaybillFileParser {
 
     /* ================= CSV PARSING ================= */
 
-    private List<Map<String, Object>> parseCsv(MultipartFile file) throws Exception {
+ //   private List<Map<String, Object>> parseCsv(MultipartFile file) throws Exception {
 
-    List<Map<String, Object>> requests = new ArrayList<>();
+//     List<Map<String, Object>> requests = new ArrayList<>();
 
-    CSVParser parser = CSVFormat.DEFAULT
-            .withFirstRecordAsHeader()
-            .withIgnoreHeaderCase()
-            .withTrim()
-            .parse(new InputStreamReader(file.getInputStream()));
+//     CSVParser parser = CSVFormat.DEFAULT
+//             .withFirstRecordAsHeader()
+//             .withIgnoreHeaderCase()
+//             .withTrim()
+//             .parse(new InputStreamReader(file.getInputStream()));
 
-    for (CSVRecord record : parser) {
+//     for (CSVRecord record : parser) {
 
-        Map<String, String> rowData = new HashMap<>();
+//         Map<String, String> rowData = new HashMap<>();
 
-        // for (String header : parser.getHeaderMap().keySet()) {
-        //     rowData.put(header, record.get(header).trim());
-        // }
+//         // for (String header : parser.getHeaderMap().keySet()) {
+//         //     rowData.put(header, record.get(header).trim());
+//         // }
 
-for (String header : parser.getHeaderMap().keySet()) {
+// for (String header : parser.getHeaderMap().keySet()) {
 
-    String normalizedKey = header
-            .replace("\uFEFF", "")   // remove BOM
-            .replace(" ", "")        // remove spaces
-            .trim();
+//     String normalizedKey = header
+//             .replace("\uFEFF", "")   // remove BOM
+//             .replace(" ", "")        // remove spaces
+//             .trim();
 
-    rowData.put(normalizedKey, record.get(header).trim());
-}
+//     rowData.put(normalizedKey, record.get(header).trim());
+// }
 
 
-        requests.add(buildWaybillRequest(rowData));
-    }
+//         requests.add(buildWaybillRequest(rowData));
+//     }
 
-    return requests;
-}
+//     return requests;
+// }
 
     /* ================= DATE CONVERSION ================= */   
 
@@ -193,7 +193,9 @@ private String toBluedartDate(String dateStr) {
         List<Map<String, String>> dims = dimensionRows.get(refNo);
         List<Map<String, String>> items = itemRows.get(refNo);
         
-        requests.add(buildWaybillRequest(waybillRow));
+       // requests.add(buildWaybillRequest(waybillRow));
+       requests.add(buildWaybillRequest(waybillRow, dims));
+
     }
 
     workbook.close();
@@ -246,8 +248,10 @@ private Map<String, List<Map<String, String>>> parseMultiRowSheet(Sheet sheet) {
 
     /* ================= ROW → REQUEST ================= */
 private Map<String, Object> buildWaybillRequest(
-    Map<String, String> row
-){
+    Map<String, String> row,
+    List<Map<String, String>> dimensionRows
+)
+{
 
     /* ---------- SHIPPER ---------- */
     Map<String, Object> shipper = new HashMap<>();
@@ -330,30 +334,67 @@ shipper.put("OriginArea", row.get("billingarea"));
     services.put("Commodity", commodity);
 
         /* ---------- DIMENSIONS ---------- */
-    // List<Map<String, Object>> dimensions = new ArrayList<>();
 
-    //     if (dimensionRows != null) {
-    //         for (Map<String, String> d : dimensionRows) {
-    //             Map<String, Object> dim = new HashMap<>();
-    //             dim.put("Length", safeDouble(d.get("length")));
-    //             dim.put("Breadth", safeDouble(d.get("breadth")));
-    //             dim.put("Height", safeDouble(d.get("height")));
-    //             dim.put("Count", safeInt(d.get("count")));
-    //             dimensions.add(dim);
-    //         }
-    // }
+    // Map<String, Object> dimensions = new HashMap<>();
+    // dimensions.put("Length", safeDouble(row.get("length")));
+    // dimensions.put("Breadth", safeDouble(row.get("breadth")));
+    // dimensions.put("Height", safeDouble(row.get("height")));
+    // dimensions.put("Count", safeInt(row.get("piececount")));
+    // services.put("Dimensions",List.of(dimensions));
 
-    //     if (!dimensions.isEmpty()) {
-    //         services.put("Dimensions", dimensions);
-    //     }
+    /* ---------- DIMENSIONS (MULTI-PIECE) ---------- */
+
+int waybillPieceCount = safeInt(row.get("piececount"));
+List<Map<String, Object>> dimensions = new ArrayList<>();
+int dimensionPieceCount = 0;
+
+// Case 1: Dimensions sheet has rows
+if (dimensionRows != null && !dimensionRows.isEmpty()) {
+
+    for (Map<String, String> d : dimensionRows) {
+
+        int count = safeInt(d.get("count"));
+
+        Map<String, Object> dim = new HashMap<>();
+        dim.put("Length", safeDouble(d.get("length")));
+        dim.put("Breadth", safeDouble(d.get("breadth")));
+        dim.put("Height", safeDouble(d.get("height")));
+        dim.put("Count", count);
+
+        dimensionPieceCount += count;
+        dimensions.add(dim);
+    }
+
+    // 🔴 Validation
+    if (dimensionPieceCount != waybillPieceCount) {
+        throw new RuntimeException(
+            "Dimension count mismatch for ReferenceNo "
+            + row.get("referenceno")
+            + " | Waybill=" + waybillPieceCount
+            + " | Dimensions=" + dimensionPieceCount
+        );
+    }
+
+    services.put("Dimensions", dimensions);
+    services.put("PieceCount", dimensionPieceCount);
+    services.put("ItemCount", dimensionPieceCount);
+}
+// Case 2: No dimensions provided → fallback to Waybill
+else {
+
+    Map<String, Object> dim = new HashMap<>();
+    dim.put("Length", safeDouble(row.get("length")));
+    dim.put("Breadth", safeDouble(row.get("breadth")));
+    dim.put("Height", safeDouble(row.get("height")));
+    dim.put("Count", waybillPieceCount);
+
+    services.put("Dimensions", List.of(dim));
+    services.put("PieceCount", waybillPieceCount);
+    services.put("ItemCount", waybillPieceCount);
+}
 
 
-    Map<String, Object> dimensions = new HashMap<>();
-    dimensions.put("Length", safeDouble(row.get("length")));
-    dimensions.put("Breadth", safeDouble(row.get("breadth")));
-    dimensions.put("Height", safeDouble(row.get("height")));
-    dimensions.put("Count", safeInt(row.get("piececount")));
-    services.put("Dimensions",List.of(dimensions));
+
 
     /* ---------- ITEM ---------- */
 // List<Map<String, Object>> items = new ArrayList<>();
