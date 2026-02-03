@@ -353,7 +353,7 @@ shipper.put("OriginArea", row.get("billingarea"));
     dimensions.put("Breadth", safeDouble(row.get("breadth")));
     dimensions.put("Height", safeDouble(row.get("height")));
     dimensions.put("Count", safeInt(row.get("piececount")));
-    services.put("Dimensions",dimensions);
+    services.put("Dimensions",List.of(dimensions));
 
     /* ---------- ITEM ---------- */
 // List<Map<String, Object>> items = new ArrayList<>();
