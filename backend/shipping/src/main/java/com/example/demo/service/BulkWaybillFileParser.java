@@ -26,7 +26,7 @@ public class BulkWaybillFileParser {
 
         if (filename.endsWith(".csv")) {
             System.out.println("Parsing CSV file");
-            //return parseCsv(file);
+            return parseCsv(file);
         } else if (filename.endsWith(".xlsx")) {
             return parseXlsx(file); 
         }
@@ -34,53 +34,42 @@ public class BulkWaybillFileParser {
         throw new IllegalArgumentException("Unsupported file type");
     }
 
-    private String normalizeHeader(String header) {
-    
-        if(header == null) {
-        return "";
-    }
-        return header
-        .replace("\uFEFF", "")   // remove BOM
-        .replace(" ", "")        // remove spaces
-        .replace("\n", "")       // remove new lines
-        .replace("*", "")        // remove asterisks
-        .trim()
-        .toLowerCase();
-    }
-
     /* ================= CSV PARSING ================= */
 
-//     private List<Map<String, Object>> parseCsv(MultipartFile file) throws Exception {
+    private List<Map<String, Object>> parseCsv(MultipartFile file) throws Exception {
 
-//     List<Map<String, Object>> requests = new ArrayList<>();
+    List<Map<String, Object>> requests = new ArrayList<>();
 
-//     CSVParser parser = CSVFormat.DEFAULT
-//             .withFirstRecordAsHeader()
-//             .withIgnoreHeaderCase()
-//             .withTrim()
-//             .parse(new InputStreamReader(file.getInputStream()));
+    CSVParser parser = CSVFormat.DEFAULT
+            .withFirstRecordAsHeader()
+            .withIgnoreHeaderCase()
+            .withTrim()
+            .parse(new InputStreamReader(file.getInputStream()));
 
-//     for (CSVRecord record : parser) {
+    for (CSVRecord record : parser) {
 
-//         Map<String, String> rowData = new HashMap<>();
+        Map<String, String> rowData = new HashMap<>();
 
-//         // for (String header : parser.getHeaderMap().keySet()) {
-//         //     rowData.put(header, record.get(header).trim());
-//         // }
+        // for (String header : parser.getHeaderMap().keySet()) {
+        //     rowData.put(header, record.get(header).trim());
+        // }
 
-// for (String header : parser.getHeaderMap().keySet()) {
+for (String header : parser.getHeaderMap().keySet()) {
 
-//     String normalizedKey = normalizeHeader(header);
+    String normalizedKey = header
+            .replace("\uFEFF", "")   // remove BOM
+            .replace(" ", "")        // remove spaces
+            .trim();
 
-//     rowData.put(normalizedKey, record.get(header).trim());
-// }
+    rowData.put(normalizedKey, record.get(header).trim());
+}
 
 
-//         requests.add(buildWaybillRequest(rowData));
-//     }
+        requests.add(buildWaybillRequest(rowData));
+    }
 
-//     return requests;
-// }
+    return requests;
+}
 
     /* ================= DATE CONVERSION ================= */   
 
@@ -117,7 +106,7 @@ private String toBluedartDate(String dateStr) {
     return "/Date(" + millis + ")/";
 }
 
-    /* ================= XLSX PARSING ================= */
+     /* ================= XLSX PARSING ================= */
 
     private List<Map<String, Object>> parseXlsx(MultipartFile file) throws Exception {
 
@@ -167,7 +156,6 @@ private String toBluedartDate(String dateStr) {
         if (headerCell != null) {
             String headerName = normalizeHeader(headerCell.getStringCellValue());
             headerMap.put(j, headerName);
-            System.out.println(headerName+"\n");
         }
     }
 
@@ -205,7 +193,7 @@ private String toBluedartDate(String dateStr) {
         List<Map<String, String>> dims = dimensionRows.get(refNo);
         List<Map<String, String>> items = itemRows.get(refNo);
         
-        requests.add(buildWaybillRequest(waybillRow, dims, items));
+        requests.add(buildWaybillRequest(waybillRow));
     }
 
     workbook.close();
@@ -255,11 +243,10 @@ private Map<String, List<Map<String, String>>> parseMultiRowSheet(Sheet sheet) {
 
 
 
+
     /* ================= ROW → REQUEST ================= */
 private Map<String, Object> buildWaybillRequest(
-    Map<String, String> row, // waybill row
-    List<Map<String, String>> dimensionRows,
-    List<Map<String, String>> itemRows
+    Map<String, String> row
 ){
 
     /* ---------- SHIPPER ---------- */
@@ -269,16 +256,14 @@ shipper.put("CustomerName", row.get("shippername"));
 shipper.put("CustomerMobile", row.get("sendermobile"));
 shipper.put("CustomerAddress1", row.get("pickupaddress"));
 shipper.put("CustomerPincode", row.get("pickuppincode"));
-shipper.put("OriginArea",row.get("billingarea"));
+shipper.put("OriginArea", row.get("billingarea"));
 
     shipper.put("CustomerAddress2", "");
     shipper.put("CustomerAddress3", "");
     shipper.put("CustomerAddressinfo", "");
-    //shipper.put("CustomerPincode", row.get("CustomerPincode"));
     shipper.put("CustomerTelephone", row.get("sendertelephone"));
     shipper.put("CustomerEmailID", row.get("senderemailid"));
     shipper.put("IsToPayCustomer", safeBoolean(row.get("topaycustomer")));
-    //shipper.put("OriginArea", row.get("OriginArea"));
     //shipper.put("Sender", "BulkUpload");
     shipper.put("VendorCode", row.get("vendorcode"));
 
@@ -345,42 +330,51 @@ shipper.put("OriginArea",row.get("billingarea"));
     services.put("Commodity", commodity);
 
         /* ---------- DIMENSIONS ---------- */
-    List<Map<String, Object>> dimensions = new ArrayList<>();
+    // List<Map<String, Object>> dimensions = new ArrayList<>();
 
-        if (dimensionRows != null) {
-            for (Map<String, String> d : dimensionRows) {
-                Map<String, Object> dim = new HashMap<>();
-                dim.put("Length", safeDouble(d.get("length")));
-                dim.put("Breadth", safeDouble(d.get("breadth")));
-                dim.put("Height", safeDouble(d.get("height")));
-                dim.put("Count", safeInt(d.get("count")));
-                dimensions.add(dim);
-            }
-    }
+    //     if (dimensionRows != null) {
+    //         for (Map<String, String> d : dimensionRows) {
+    //             Map<String, Object> dim = new HashMap<>();
+    //             dim.put("Length", safeDouble(d.get("length")));
+    //             dim.put("Breadth", safeDouble(d.get("breadth")));
+    //             dim.put("Height", safeDouble(d.get("height")));
+    //             dim.put("Count", safeInt(d.get("count")));
+    //             dimensions.add(dim);
+    //         }
+    // }
 
-        if (!dimensions.isEmpty()) {
-            services.put("Dimensions", dimensions);
-        }
+    //     if (!dimensions.isEmpty()) {
+    //         services.put("Dimensions", dimensions);
+    //     }
+
+
+    Map<String, Object> dimensions = new HashMap<>();
+    dimensions.put("Length", safeDouble(row.get("length")));
+    dimensions.put("Breadth", safeDouble(row.get("breadth")));
+    dimensions.put("Height", safeDouble(row.get("height")));
+    dimensions.put("Count", safeInt(row.get("piececount")));
+    services.put("Dimensions",dimensions);
 
     /* ---------- ITEM ---------- */
-List<Map<String, Object>> items = new ArrayList<>();
+// List<Map<String, Object>> items = new ArrayList<>();
 
-if (itemRows != null) {
-    for (Map<String, String> r : itemRows) {
-        Map<String, Object> item = new HashMap<>();
-        item.put("ItemName", r.get("itemname"));
-        item.put("ItemValue", safeDouble(r.get("itemvalue")));
-        item.put("Itemquantity", safeInt(r.get("itemquantity")));
-        item.put("TotalValue", safeDouble(r.get("totalvalue")));
-        items.add(item);
-    }
-}
+// if (itemRows != null) {
+//     for (Map<String, String> r : itemRows) {
+//         Map<String, Object> item = new HashMap<>();
+//         item.put("ItemName", r.get("itemname"));
+//         item.put("ItemValue", safeDouble(r.get("itemvalue")));
+//         item.put("Itemquantity", safeInt(r.get("itemquantity")));
+//         item.put("TotalValue", safeDouble(r.get("totalvalue")));
+//         items.add(item);
+//     }
+// }
 
-if (!items.isEmpty()) {
-    services.put("itemdtl", items);
-}
+// if (!items.isEmpty()) {
+//     services.put("itemdtl", items);
+// }
 
-
+// Map<String,Object> itemdtl=new HashMap<>();
+// itemdtl.put()
 
     /* ---------- REQUEST ---------- */
     Map<String, Object> request = new HashMap<>();
@@ -401,6 +395,7 @@ if (!items.isEmpty()) {
 
     return finalPayload;
 }
+
 
 private int safeInt(String value) {
     if (value == null || value.isBlank()) return 0;
@@ -423,6 +418,15 @@ private boolean safeBoolean(String value) {
         || value.equals("1");
 }
 
+private String normalizeHeader(String header) {
+    if (header == null) return "";
+    return header
+            .replace("\uFEFF", "")   // BOM
+            .replace("*", "")        // required marker
+            .replace(" ", "")        // spaces
+            .trim()
+            .toLowerCase();          // case-insensitive
+}
 
 
 }
