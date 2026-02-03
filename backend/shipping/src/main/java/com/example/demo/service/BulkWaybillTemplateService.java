@@ -95,7 +95,7 @@ public class BulkWaybillTemplateService {
 
 
         String[] dimensionsHeaders = {
-            "Reference No",	"Length",	"Breadth",	"Height","Count"
+            "Reference No", "Length", "Breadth", "Height","Count"
         };
 
         String[] itemDetailsHeaders = {
