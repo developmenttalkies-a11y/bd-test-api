@@ -6233,4 +6233,151 @@
       "TransactionAmount" : 0
     }
   }
+}, {
+  "awbNo" : "77707350195",
+  "creditReferenceNo" : "CR940126",
+  "createdAt" : "2026-02-04T13:31:26.532791488",
+  "request" : {
+    "Request" : {
+      "Consignee" : {
+        "ConsigneeName" : "Test Company",
+        "ConsigneeAddress2" : "",
+        "ConsigneeAddress1" : "Test Delivery Address",
+        "ConsigneeAddressinfo" : "",
+        "ConsigneeAddress3" : "",
+        "AvailableTiming" : "",
+        "ConsigneePincode" : "110027",
+        "ConsigneeTelephone" : "0112345678",
+        "ConsigneeAttention" : "Test Consignee",
+        "AvailableDays" : "",
+        "ConsigneeEmailID" : "consignee@test.com",
+        "ConsigneeMobile" : "9995554441"
+      },
+      "Services" : {
+        "SpecialInstruction" : "Handle with care",
+        "IsReversePickup" : false,
+        "CreditReferenceNo3" : "REF3",
+        "PieceCount" : 2,
+        "PickupTime" : "1600",
+        "ActualWeight" : 0.5,
+        "RegisterPickup" : false,
+        "PackType" : "L",
+        "PDFOutputNotRequired" : true,
+        "ProductFeature" : "",
+        "CollectableAmount" : 100.0,
+        "itemdtl" : [ {
+          "eWaybillNumber" : "242509508624",
+          "SubProduct2" : "noise",
+          "Instruction" : "",
+          "SubProduct1" : "noise",
+          "TotalValue" : 100.0,
+          "HSCode" : "62052000",
+          "supplyType" : "O",
+          "SellerGSTNNumber" : "05AAACB0446L1ZY",
+          "ItemName" : "test item name",
+          "PlaceofSupply" : "",
+          "SGSTAmount" : 50.0,
+          "InvoiceNumber" : "xyz",
+          "InvoiceDate" : "/Date(1770163200000)/",
+          "subSupplyType" : 7,
+          "CGSTAmount" : 50.0,
+          "cessAmount" : 50.0,
+          "eWaybillDate" : "/Date(1775088000000)/",
+          "TaxableAmount" : 100.0,
+          "docType" : "21",
+          "ItemID" : "x",
+          "IGSTAmount" : 0.0,
+          "ProductDesc1" : "pds1",
+          "Itemquantity" : 1,
+          "SKUNumber" : "",
+          "ProductDesc2" : "psd2",
+          "ItemValue" : 100.0,
+          "countryOfOrigin" : "IN",
+          "SellerName" : "test seller"
+        } ],
+        "DeliveryTimeSlot" : "",
+        "noOfDCGiven" : "0",
+        "AWBNo" : "",
+        "PayableAt" : "",
+        "Commodity" : {
+          "CommodityDetail2" : "",
+          "CommodityDetail3" : "",
+          "CommodityDetail1" : "General Goods"
+        },
+        "PickupMode" : "",
+        "ItemCount" : 2,
+        "ParcelShopCode" : "",
+        "PreferredPickupTimeSlot" : "",
+        "DeclaredValue" : 100.0,
+        "CreditReferenceNo" : "CR940126",
+        "IsPartialPickup" : false,
+        "ProductCode" : "A",
+        "IsDedicatedDeliveryNetwork" : false,
+        "ProductType" : 1,
+        "IsDutyTaxPaidByShipper" : false,
+        "Dimensions" : [ {
+          "Length" : 10.0,
+          "Height" : 20.0,
+          "Count" : 2,
+          "Breadth" : 15.0
+        } ],
+        "PickupDate" : "/Date(1770163200000)/",
+        "Officecutofftime" : "",
+        "IsForcePickup" : false,
+        "SubProductCode" : "C",
+        "PickupType" : "",
+        "TotalCashPaytoCustomer" : 0,
+        "CreditReferenceNo2" : "REF2"
+      },
+      "Shipper" : {
+        "CustomerAddressinfo" : "",
+        "CustomerMobile" : "9996665554",
+        "CustomerCode" : "940111",
+        "OriginArea" : "GGN",
+        "CustomerPincode" : "122002",
+        "CustomerTelephone" : "0123456789",
+        "CustomerEmailID" : "sender@test.com",
+        "IsToPayCustomer" : false,
+        "CustomerAddress3" : "",
+        "CustomerAddress2" : "",
+        "VendorCode" : "VEND001",
+        "CustomerName" : "Test Shipper",
+        "CustomerAddress1" : "Test Pickup Address"
+      }
+    },
+    "Profile" : {
+      "LoginID" : "GG940111",
+      "Api_type" : "S",
+      "LicenceKey" : "kh7mnhqkmgegoksipxr0urmqesesseup"
+    }
+  },
+  "response" : {
+    "GenerateWayBillResult" : {
+      "AWBNo" : "77707350195",
+      "AWBPrintContent" : null,
+      "AvailableAmountForBooking" : 0,
+      "AvailableBalance" : 0,
+      "CCRCRDREF" : "CR940126",
+      "ClusterCode" : "NRA",
+      "DestinationArea" : "DEL",
+      "DestinationLocation" : "NRA",
+      "InvoicePrintContent" : null,
+      "IsError" : false,
+      "IsErrorInPU" : false,
+      "MPSDetails" : [ {
+        "MPSNumber" : "77707350195-0001",
+        "MPSRefNumber" : null
+      }, {
+        "MPSNumber" : "77707350195-0002",
+        "MPSRefNumber" : null
+      } ],
+      "MPSLabelPrintContent" : null,
+      "Status" : [ {
+        "StatusCode" : "Valid",
+        "StatusInformation" : "Waybill Generation Successful"
+      } ],
+      "TokenNumber" : null,
+      "TransactionAmount" : 0
+    }
+  }
 } ]

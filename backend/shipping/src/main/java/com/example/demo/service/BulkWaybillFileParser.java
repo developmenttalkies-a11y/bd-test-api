@@ -119,8 +119,68 @@ private String toBluedartDate(String dateStr) {
         throw new RuntimeException("PickupDate is mandatory");
     }
 
-    return parseDateInternal(dateStr, true);
+    dateStr = dateStr.trim();
+
+    LocalDate date;
+
+    try {
+        // 1️⃣ Excel numeric date (e.g. 45235)
+        if (dateStr.matches("\\d+")) {
+            double excelDate = Double.parseDouble(dateStr);
+            date = DateUtil.getLocalDateTime(excelDate).toLocalDate();
+        }
+        // 2️⃣ yyyy-MM-dd
+        else if (dateStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            date = LocalDate.parse(dateStr);
+        }
+        // 3️⃣ dd-MM-yyyy
+        else if (dateStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            date = LocalDate.parse(
+                    dateStr,
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            );
+        }
+        // 4️⃣ yyyy/MM/dd
+        else if (dateStr.matches("\\d{4}/\\d{2}/\\d{2}")) {
+            date = LocalDate.parse(
+                    dateStr,
+                    DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            );
+        }
+        // 5️⃣ dd/MM/yyyy
+        else if (dateStr.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            date = LocalDate.parse(
+                    dateStr,
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            );
+        }
+        // 6️⃣ Excel short date: M/d/yy  (2/4/26)
+        else if (dateStr.matches("\\d{1,2}/\\d{1,2}/\\d{2}")) {
+            date = LocalDate.parse(
+                    dateStr,
+                    DateTimeFormatter.ofPattern("M/d/yy")
+            );
+        }
+        else {
+            throw new RuntimeException("Unsupported PickupDate format: " + dateStr);
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException(
+                "Invalid PickupDate format: " + dateStr +
+                ". Supported formats: yyyy-MM-dd, dd-MM-yyyy, yyyy/MM/dd, dd/MM/yyyy, M/d/yy",
+                e
+        );
+    }
+
+    long millis = date
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli();
+
+    return "/Date(" + millis + ")/";
 }
+
 
 
 private String toBluedartDateOptional(String dateStr) {
@@ -523,7 +583,7 @@ if (itemRows != null && !itemRows.isEmpty()) {
         item.put("TotalValue", safeDouble(r.get("totalvalue")));
 
         item.put("InvoiceNumber", r.get("invoicenumber"));
-        item.put("InvoiceDate", toBluedartDateOptional(r.get("invoicedate")));
+        item.put("InvoiceDate", toBluedartDate(r.get("invoicedate")));
 
         item.put("SellerName", r.get("sellername"));
         item.put("SellerGSTNNumber", r.get("sellergstnnumber"));
@@ -531,7 +591,7 @@ if (itemRows != null && !itemRows.isEmpty()) {
         item.put("cessAmount", safeDouble(r.get("cessamount")));
 
         item.put("eWaybillNumber", r.get("ewaybillnumber"));
-        item.put("eWaybillDate", toBluedartDateOptional(r.get("ewaybilldate")));
+        item.put("eWaybillDate", toBluedartDate(r.get("ewaybilldate")));
 
         item.put("supplyType", r.get("supplytype"));
         item.put("subSupplyType", safeInt(r.get("subsupplytype")));
