@@ -28,7 +28,14 @@ public class BulkWaybillFileParser {
             System.out.println("Parsing CSV file");
             //return parseCsv(file);
         } else if (filename.endsWith(".xlsx")) {
-            return parseXlsx(file); 
+
+            try {
+    return parseXlsx(file);
+} catch (Exception e) {
+    e.printStackTrace();   // 🔥 THIS IS KEY
+    throw e;
+}
+ 
         }
 
         throw new IllegalArgumentException("Unsupported file type");
@@ -73,29 +80,95 @@ public class BulkWaybillFileParser {
 
     /* ================= DATE CONVERSION ================= */   
 
+// private String toBluedartDate(String dateStr) {
+
+//     if (dateStr == null || dateStr.isBlank()) {
+//         throw new RuntimeException("PickupDate is mandatory");
+//     }
+
+//     dateStr = dateStr.trim();
+
+//     LocalDate date;
+
+//     // Support multiple formats
+//     if (dateStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
+//         // yyyy-MM-dd
+//         date = LocalDate.parse(dateStr);
+//     } else if (dateStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//         // dd-MM-yyyy
+//         DateTimeFormatter formatter =
+//                 DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//         date = LocalDate.parse(dateStr, formatter);
+//     } else {
+//         throw new RuntimeException(
+//             "Invalid PickupDate format. Use yyyy-MM-dd or dd-MM-yyyy"
+//         );
+//     }
+
+//     long millis = date
+//             .atStartOfDay(ZoneId.systemDefault())
+//             .toInstant()
+//             .toEpochMilli();
+
+//     return "/Date(" + millis + ")/";
+// }
+
 private String toBluedartDate(String dateStr) {
 
     if (dateStr == null || dateStr.isBlank()) {
         throw new RuntimeException("PickupDate is mandatory");
     }
 
-    dateStr = dateStr.trim();
+    return parseDateInternal(dateStr, true);
+}
 
+
+private String toBluedartDateOptional(String dateStr) {
+
+    if (dateStr == null || dateStr.isBlank()) {
+        return null; // 👈 VERY IMPORTANT
+    }
+
+    return parseDateInternal(dateStr, false);
+}
+
+
+private String parseDateInternal(String dateStr, boolean isMandatory) {
+
+    dateStr = dateStr.trim();
     LocalDate date;
 
-    // Support multiple formats
-    if (dateStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
-        // yyyy-MM-dd
-        date = LocalDate.parse(dateStr);
-    } else if (dateStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
-        // dd-MM-yyyy
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        date = LocalDate.parse(dateStr, formatter);
-    } else {
-        throw new RuntimeException(
-            "Invalid PickupDate format. Use yyyy-MM-dd or dd-MM-yyyy"
-        );
+    try {
+        if (dateStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            // yyyy-MM-dd
+            date = LocalDate.parse(dateStr);
+
+        } else if (dateStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            // dd-MM-yyyy
+            date = LocalDate.parse(
+                dateStr,
+                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            );
+
+        } else if (dateStr.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            // dd/MM/yyyy (Excel common)
+            date = LocalDate.parse(
+                dateStr,
+                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            );
+
+        } else {
+            throw new RuntimeException("Unsupported date format: " + dateStr);
+        }
+
+    } catch (Exception e) {
+        if (isMandatory) {
+            throw new RuntimeException(
+                "Invalid PickupDate format: " + dateStr +
+                ". Use yyyy-MM-dd or dd-MM-yyyy"
+            );
+        }
+        return null; // optional date → ignore
     }
 
     long millis = date
@@ -106,6 +179,7 @@ private String toBluedartDate(String dateStr) {
     return "/Date(" + millis + ")/";
 }
 
+
      /* ================= XLSX PARSING ================= */
 
     private List<Map<String, Object>> parseXlsx(MultipartFile file) throws Exception {
@@ -113,7 +187,7 @@ private String toBluedartDate(String dateStr) {
     List<Map<String, Object>> requests = new ArrayList<>();
 
     Workbook workbook = new XSSFWorkbook(file.getInputStream());
-    //Sheet sheet = workbook.getSheetAt(0); // single sheet only
+    
     Sheet wSheet = workbook.getSheet("Waybill"); // waybill sheet
     Sheet dSheet = workbook.getSheet("Dimensions"); // dimensions sheet
     Sheet iSheet = workbook.getSheet("ItemDetails"); // itemdetails sheet
@@ -194,7 +268,7 @@ private String toBluedartDate(String dateStr) {
         List<Map<String, String>> items = itemRows.get(refNo);
         
        // requests.add(buildWaybillRequest(waybillRow));
-       requests.add(buildWaybillRequest(waybillRow, dims));
+       requests.add(buildWaybillRequest(waybillRow, dims,items));
 
     }
 
@@ -210,7 +284,7 @@ private Map<String, List<Map<String, String>>> parseMultiRowSheet(Sheet sheet) {
 
     Row header = sheet.getRow(0);
     Map<Integer, String> headerMap = new HashMap<>();
-
+    //taking headers
     for (int j = 0; j < header.getLastCellNum(); j++) {
         Cell cell = header.getCell(j);
         if (cell != null) {
@@ -218,6 +292,7 @@ private Map<String, List<Map<String, String>>> parseMultiRowSheet(Sheet sheet) {
         }
     }
 
+    // taking data row-wise
     for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         Row row = sheet.getRow(i);
         if (row == null) continue;
@@ -249,7 +324,8 @@ private Map<String, List<Map<String, String>>> parseMultiRowSheet(Sheet sheet) {
     /* ================= ROW → REQUEST ================= */
 private Map<String, Object> buildWaybillRequest(
     Map<String, String> row,
-    List<Map<String, String>> dimensionRows
+    List<Map<String, String>> dimensionRows,
+    List<Map<String,String>> itemRows
 )
 {
 
@@ -416,6 +492,65 @@ else {
 
 // Map<String,Object> itemdtl=new HashMap<>();
 // itemdtl.put()
+
+
+List<Map<String, Object>> items = new ArrayList<>();
+int itemDetailsItemCount = 0;
+
+if (itemRows != null && !itemRows.isEmpty()) {
+
+    for (Map<String, String> r : itemRows) {
+
+        Map<String, Object> item = new HashMap<>();
+
+        item.put("ItemID", r.get("itemid"));
+        item.put("ItemName", r.get("itemname"));
+        item.put("ProductDesc1", r.get("productdesc1"));
+        item.put("ProductDesc2", r.get("productdesc2"));
+
+        item.put("SubProduct1", r.get("subproduct1"));
+        item.put("SubProduct2", r.get("subproduct2"));
+
+        item.put("ItemValue", safeDouble(r.get("itemvalue")));
+        item.put("Itemquantity", safeInt(r.get("itemquantity")));
+        item.put("HSCode", r.get("hscode"));
+
+        item.put("TaxableAmount", safeDouble(r.get("taxableamount")));
+        item.put("CGSTAmount", safeDouble(r.get("cgstamount")));
+        item.put("SGSTAmount", safeDouble(r.get("sgstamount")));
+        item.put("IGSTAmount", safeDouble(r.get("igstamount")));
+
+        item.put("TotalValue", safeDouble(r.get("totalvalue")));
+
+        item.put("InvoiceNumber", r.get("invoicenumber"));
+        item.put("InvoiceDate", toBluedartDateOptional(r.get("invoicedate")));
+
+        item.put("SellerName", r.get("sellername"));
+        item.put("SellerGSTNNumber", r.get("sellergstnnumber"));
+
+        item.put("cessAmount", safeDouble(r.get("cessamount")));
+
+        item.put("eWaybillNumber", r.get("ewaybillnumber"));
+        item.put("eWaybillDate", toBluedartDateOptional(r.get("ewaybilldate")));
+
+        item.put("supplyType", r.get("supplytype"));
+        item.put("subSupplyType", safeInt(r.get("subsupplytype")));
+        item.put("docType", r.get("doctype"));
+
+        // Optional / recommended defaults
+        item.put("Instruction", "");
+        item.put("SKUNumber", "");
+        item.put("PlaceofSupply", "");
+        item.put("countryOfOrigin", "IN");
+
+        itemDetailsItemCount += safeInt(r.get("itemquantity"));
+        items.add(item);
+    }
+
+    services.put("itemdtl", items);
+}
+
+
 
     /* ---------- REQUEST ---------- */
     Map<String, Object> request = new HashMap<>();
